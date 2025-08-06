@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployerController;
-use App\Http\Controllers\EmployeeController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,8 +19,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'employer'])->get('/employer/dashboard', [EmployerController::class, 'index'])->name('employer.dashboard');
-Route::middleware(['auth', 'employee'])->get('/employee/dashboard', [EmployeeController::class, 'index'])->name('employee.dashboard');
 
+//mailing test
+Route::get('/test-email', function () {
+    Mail::raw('This is a test email from Laravel.', function ($message) {
+        $message->to('your_email@example.com')
+                ->subject('Test Email');
+    });
+
+    return 'Test email sent!';
+});
 
 require __DIR__.'/auth.php';
