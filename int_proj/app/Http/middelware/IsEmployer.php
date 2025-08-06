@@ -13,7 +13,7 @@ class IsEmployer
      * @param  \Closure  $next
      * @return mixed
      */
-    public function isEmployer($request, Closure $next)
+    public function handle($request, Closure $next)
     {
         if ($request->user()->role !== 'employer') {
             return response()->json(['message' => 'Forbidden'], 403);
@@ -21,5 +21,4 @@ class IsEmployer
 
         return $next($request);
     }
-
 }

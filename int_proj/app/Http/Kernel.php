@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
 
         // Your custom middleware alias:
         'employer' => \App\Http\Middleware\IsEmployer::class,
+        'employee' => \App\Http\Middleware\IsEmployee::class,
     ];
 }
