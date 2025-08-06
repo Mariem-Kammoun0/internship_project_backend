@@ -16,3 +16,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user/profile', [UserController::class, 'showUserProfile']);
     Route::put('/user/profile', [UserController::class, 'updateUserProfile']);
 });
+
+Route::middleware(['auth:sanctum', 'employer'])->group(function () {
+    Route::get('/job-offers', [JobOfferController::class, 'index']);
+    Route::post('/job-offers', [JobOfferController::class, 'store']);
+    Route::put('/job-offers/{id}', [JobOfferController::class, 'update']);
+    Route::delete('/job-offers/{id}', [JobOfferController::class, 'destroy']);
+});
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/job-offers/company/{companyId}', [JobOfferController::class, 'getOffersByCompany']);
+    Route::get('/job-offers/{id}', [JobOfferController::class, 'show']);
+});
