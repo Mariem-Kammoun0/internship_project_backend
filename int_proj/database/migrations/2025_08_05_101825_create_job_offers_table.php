@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->decimal('salary', 10, 2)->nullable();
-            $table->enum('employment_type', ['full_time', 'part_time', 'contract', 'temporary'])->default('undefined');
-            $table->enum('type_of_contract', ['permanent', 'fixed_term', 'freelance'])->default('undefined');
+            $table->enum('employment_type', ['undefined','full_time', 'part_time', 'contract', 'temporary'])->default('undefined');
+            $table->enum('type_of_contract', ['undefined','permanent', 'fixed_term', 'freelance'])->default('undefined');
             $table->string('duration')->nullable();
             $table->text('requirements')->nullable();
             $table->date('application_deadline')->nullable();

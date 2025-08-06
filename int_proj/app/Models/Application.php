@@ -12,9 +12,7 @@ class Application extends Model
 {
     protected $fillable = [
         'job_offer_id',
-        'job_offer_title',
-        'applicant_id',
-        'applicant_name',
+        'user_id',
         'motivation_letter',
         'applied_at',
     ];

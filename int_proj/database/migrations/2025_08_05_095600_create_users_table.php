@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone')->nullable();
             $table->enum('role', ['employee', 'employer']);
-            $table->foreignUuid('company_id')->nullable()->constrained()->nullOnDelete();
+            $table->uuid('company_id')->nullable();
             $table->string('profile_picture')->nullable();
             $table->string('cv_file_path')->nullable();
             $table->enum('status', ['employed', 'unemployed'])->default('unemployed');
