@@ -11,3 +11,8 @@ Route::middleware(['auth:sanctum', 'employer'])->group(function () {
     Route::put('/company', [CompanyController::class, 'update']);
     Route::delete('/company', [CompanyController::class, 'destroyMyCompany']);
 });
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/user/profile', [UserController::class, 'showUserProfile']);
+    Route::put('/user/profile', [UserController::class, 'updateUserProfile']);
+});
