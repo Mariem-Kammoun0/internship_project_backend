@@ -56,6 +56,31 @@ class Company extends Model
             return $this->employees()->count();
         }
 
+
+    //scope methods for filtering companies
+    public function scopeByIndustry($query, $industry)
+    {
+        return $query->where('industry', $industry);
+    }
+    public function scopeBySize($query, $sizemin, $sizemax)
+    {
+        return $query->whereBetween('size', [$sizemin, $sizemax]);
+    }
+    public function scopeByLocation($query, $location)
+    {
+        return $query->where('address', 'like', '%' . $location . '%');
+    }
+    public function scopeByName($query, $name)
+    {
+        return $query->where('name', 'like', '%' . $name . '%');
+    }
+
+    /**
+     * The "booting" method of the model.
+     * This ensures that a UUID is generated for the company.
+     * @return void
+     */
+
     public static function boot()
     {
         parent::boot();
