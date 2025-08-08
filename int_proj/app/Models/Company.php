@@ -5,12 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\User;
 use App\Models\Job;
 
 class Company extends Model
 {
-    //
+    use HasFactory;
+    public $incrementing = false; 
+    protected $keyType = 'string';
+
     protected $fillable=[
         'name',
         'address',
@@ -51,4 +55,12 @@ class Company extends Model
         {
             return $this->employees()->count();
         }
+
+    public static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->id = (string) \Illuminate\Support\Str::uuid();
+        });
+    }
 }

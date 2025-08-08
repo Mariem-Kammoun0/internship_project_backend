@@ -24,11 +24,19 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+        'id' => Str::uuid(),
+        'name' => $this->faker->firstName(),
+        'surname' => $this->faker->lastName(),
+        'email' => $this->faker->unique()->safeEmail(),
+        'email_verified_at' => now(),
+        'password' => Hash::make('password123'), // default password
+        'phone' => $this->faker->phoneNumber(),
+        'role' => 'employer',
+        'company_id' => null,
+        'profile_picture' => null,
+        'cv_file_path' => null,
+        'status' =>'employed',
+        'remember_token' => Str::random(10),
         ];
     }
 
@@ -41,4 +49,26 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    public function employer()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role' => 'employer',
+                'status' => 'employed',
+            ];
+        });
+    }
+
+    public function jobSeeker()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role' => 'employee',
+                'status' => 'unemployed',
+                'password' => Hash::make('password123'),
+            ];
+        });
+    }
+    
 }

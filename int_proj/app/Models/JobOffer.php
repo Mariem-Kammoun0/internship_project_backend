@@ -5,11 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Company;
 use App\Models\Application;
 
 class JobOffer extends Model
 {
+    use HasFactory;
+    public $incrementing = false; 
+    protected $keyType = 'string';
 
     protected $fillable = [
         'title',
@@ -67,5 +71,16 @@ class JobOffer extends Model
     {
         return $query->where('application_deadline', '<=', now());
     }  
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($jobOffer) {
+            if (!$jobOffer->id) {
+                $jobOffer->id = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+    }
    
 }

@@ -5,11 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\User;
 use App\Models\JobOffer;
 
 class Application extends Model
 {
+    use HasFactory;
+    public $incrementing = false; 
+    protected $keyType = 'string';
+
     protected $fillable = [
         'job_offer_id',
         'user_id',
@@ -31,5 +36,14 @@ class Application extends Model
     public function applicant(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->id = (string) \Illuminate\Support\Str::uuid();
+        });
     }
 }

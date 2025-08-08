@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('job_offer_id')->constrained()->onDelete('cascade');
             $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
+            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->text('motivation_letter')->nullable();
             $table->timestamps();
         });
