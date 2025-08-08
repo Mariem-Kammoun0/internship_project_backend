@@ -8,6 +8,30 @@ use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
+    public function index(Request $request)
+    {
+        $query = Company::query();
+        if ($request->filled('name')) {
+            $query()->byName($request->name);
+        }
+        if ($request->filled('industry')) {
+            $query()->byIndustry($request->name);
+        }
+        if ($request->filled('size')) {
+            $query()->bySize($request->size);        
+        }
+        if ($request->filled('location')) {
+            $query()->byLocation($request->location);
+        }
+        $results = JobOffer::query()->paginate(10);
+
+        if ($results->isEmpty()) {
+            return response()->json(['message' => 'No companies found'], 404);
+        }
+        
+        return response()->json($results);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

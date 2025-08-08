@@ -25,19 +25,35 @@ class JobOfferController extends Controller
     }
 
     /**
-     * Display a listing of the resource by company -> for potential employees.
+     * Display a listing of the resource ->for job seekers.
      */
-    public function getOffersByCompany(string $companyId)
+    public function indexForJobSeekers(Request $request)
     {
-        $company = Company::find($companyId);
-
-        if (!$company) {
-            return response()->json(['message' => 'Company not found'], 404);
+        $query = JobOffer::query();
+        if ($request->filled('title')) {
+            $query->byTitle($request->title);
         }
-
-        $jobOffers = $company->jobs;
-
-        return response()->json($jobOffers);
+        if ($request->filled('employment_type')) {
+            $query->byEmploymentType($request->employment_type);
+        }
+        if ($request->filled('type_of_contract')) {
+            $query->byTypeOfContract($request->type_of_contract);
+        }
+        if ($request->filled('salary')) {
+            $query->bySalary($request->salary);
+        }
+        if ($request->filled('company_location')) {
+            $query->companyLocation($request->company_location);
+        }
+        if ($request->filled('application_deadline')) {
+            $query->byApplicationDeadline($request->application_deadline);
+        }
+        $sort= $request->input('sort', 'newest');
+        $results = $query->sortBy($sort)->paginate(10);
+        if ($results->isEmpty()) {
+            return response()->json(['message' => 'No job offers found'], 404);
+        }
+        return response()->json($results);
     }
     
     /**

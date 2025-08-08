@@ -111,7 +111,13 @@ class JobOffer extends Model
 
     }
 
-    public function requirementsAsArray()
+    public function scopeCompanyLocation($query, $location)
+    {
+        $companyIds = Company::where('location', $location)->pluck('id');
+        return $companyIds->isNotEmpty() ? $query->whereIn('company_id', $companyIds) : $query;
+    }
+
+    public function scopeRequirements()
     {
         return $this->requirements ? explode(',', $this->requirements) : [];
     }
