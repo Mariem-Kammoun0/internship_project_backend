@@ -30,8 +30,9 @@ class JobOfferController extends Controller
     public function indexForJobSeekers(Request $request)
     {
         $query = JobOffer::query();
-        if ($request->filled('title')) {
-            $query->byTitle($request->title);
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('title', 'like', "%$search%");
         }
         if ($request->filled('employment_type')) {
             $query->byEmploymentType($request->employment_type);
