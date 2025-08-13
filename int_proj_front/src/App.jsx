@@ -4,6 +4,7 @@ import NavBar from './components/NavBar.jsx';
 import { useEffect } from 'react';
 import LoginPage from './pages/login.jsx';
 import Register from './pages/Register.jsx';
+import JobOffers from './pages/JobOffers.jsx'
 
 function App() {
   useEffect(() => {
@@ -15,7 +16,8 @@ function App() {
       <Routes>
         <Route path="/Welcome" element={<Welcome />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path='/register' element={<Register />} />   
+        <Route path='/register' element={<Register />} />
+        <Route path='/job-offers' element={<JobOffers />}/>
       </Routes>
     </div>
   );

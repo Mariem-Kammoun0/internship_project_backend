@@ -7,7 +7,6 @@ const api= axios.create({
     }
 });
 
-//attach token if usqer is authenticated
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -16,17 +15,14 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Centralized error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Handle unauthorized
     if (error.response?.status === 401) {
       console.warn("Unauthorized! Redirecting to login...");
-      window.location.href = "/login";
+      //window.location.href = "/login";
     }
 
-    // Handle server errors
     if (error.response?.status >= 500) {
       console.error("Server error:", error.response.data);
     }

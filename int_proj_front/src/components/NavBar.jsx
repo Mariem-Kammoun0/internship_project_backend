@@ -1,3 +1,5 @@
+import logo from '../assets/interview.png';
+
 export default function Navbar({ user }) {
   let navigation = [
     { name: 'Home', href: '/' },
@@ -31,7 +33,11 @@ export default function Navbar({ user }) {
   return (
     <div className="navbar bg-base-200 px-6">
       <div className="flex-1">
-        <a href="/" className="btn btn-ghost normal-case text-xl">MyCompany</a>
+        <img
+          src={logo}
+          alt="Company Logo"
+            />        
+          <a href="/" className="btn btn-ghost normal-case text-xl">Lynq</a>
       </div>
       <div className="flex-none gap-4">
         <ul className="menu menu-horizontal px-1">

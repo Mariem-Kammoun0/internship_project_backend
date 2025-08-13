@@ -1,6 +1,4 @@
-import {getAllJobs} from "../services/jobService"
 function JobCard ({JobOffer}){
-
     return(
         <div className="job-card">
             <img src={JobOffer.comapany.logo}></img>
@@ -15,3 +13,5 @@ function JobCard ({JobOffer}){
         </div>
     )
 }
+
+export default JobCard;

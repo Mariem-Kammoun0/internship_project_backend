@@ -1,7 +1,7 @@
 import JobCard from "../components/JobCard";
 import { getJobs } from "../services/jobService";
 import { useEffect, useState } from "react";
-import JobFilters from "../components/JobFilters";
+import JobFilter from "../components/JobFilter";
 
 function JobOffers() {
     const [offers, setOffers] = useState([]);
@@ -53,7 +53,7 @@ function JobOffers() {
 
     return (
         <div className="job-offers">
-            <JobFilters
+            <JobFilter
                 onSearch={handleSearch}
                 onFilterChange={handleFilterChange}
                 loading={loading}

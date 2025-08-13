@@ -24,11 +24,6 @@ Route::middleware(['auth:sanctum', 'employer'])->group(function () {
     Route::delete('/job-offers/{id}', [JobOfferController::class, 'destroy']);
 });
 
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/job-offers/company/{companyId}', [JobOfferController::class, 'getOffersByCompany']);
-    Route::get('/job-offers/{id}', [JobOfferController::class, 'show']);
-});
-
 Route::middleware(['auth:sanctum','employee'])->group(function () {
     Route::post('/applications/{offerId}', [ApplicationController::class, 'store']);
     Route::get('/my-applications', [ApplicationController::class, 'myApplications']);
@@ -40,3 +35,9 @@ Route::middleware(['auth:sanctum', 'employer'])->group(function () {
     Route::get('/applications/{offerId}/Applications', [ApplicationController::class, 'index']);
     Route::delete('/applications/{offerId}/Applications/{applicationId}', [ApplicationController::class, 'rejectApplication']);
 });
+
+//public routes
+Route::get('/job-offers', [JobOfferController::class, 'indexForJobSeekers']);
+Route::get('/job-offers/company/{companyId}', [JobOfferController::class, 'getOffersByCompany']);
+Route::get('/companies', [CompanyController::class, 'index']);
+Route::get('/job-offers/{id}', [JobOfferController::class, 'show']);
