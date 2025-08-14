@@ -30,9 +30,9 @@ class Company extends Model
     /**
      * Get the users associated with the company.
      */
-    public function users(): HasMany
+    public function employees(): HasMany
         {
-            return $this->hasMany(User::class); 
+            return $this->hasMany(User::class, 'company_id'); 
         }
 
     /**

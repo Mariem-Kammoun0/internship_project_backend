@@ -29,8 +29,8 @@ function JobOffers() {
                     search: lastSearchQuery,
                     filters
                 });
-                setOffers(data.data);
-                setTotalPages(data.last_page);
+                setOffers(data);
+                setTotalPages(last_page);
             } catch (err) {
                 setError("Failed to load job offers...");
             } finally {

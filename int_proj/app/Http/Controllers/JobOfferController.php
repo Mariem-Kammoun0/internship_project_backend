@@ -29,34 +29,50 @@ class JobOfferController extends Controller
      */
     public function indexForJobSeekers(Request $request)
     {
-        $query = JobOffer::query();
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where('title', 'like', "%$search%");
+        try {
+            $query = JobOffer::with(['company' => function ($q) {
+                $q->select('id', 'name', 'logo', 'address');
+            }]);
+
+            // Optional filters
+            if ($request->filled('search')) {
+                $query->where('title', 'like', "%{$request->search}%");
+            }
+            if ($request->filled('employment_type')) {
+                $query->byEmploymentType($request->employment_type);
+            }
+            if ($request->filled('type_of_contract')) {
+                $query->byTypeOfContract($request->type_of_contract);
+            }
+            if ($request->filled('salary')) {
+                $query->bySalary($request->salary);
+            }
+            if ($request->filled('company_location')) {
+                $query->companyLocation($request->company_location);
+            }
+            if ($request->filled('application_deadline')) {
+                $query->byApplicationDeadline($request->application_deadline);
+            }
+
+            // Safe sorting
+            $sort = $request->input('sort', 'newest');
+            if (method_exists(JobOffer::class, 'scopeSortBy')) {
+                $query->sortBy($sort);
+            }
+
+            $results = $query->paginate(10);
+
+            return response()->json($results);
+
+        } catch (\Throwable $e) {
+            // Return detailed error for debugging
+            return response()->json([
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ], 500);
         }
-        if ($request->filled('employment_type')) {
-            $query->byEmploymentType($request->employment_type);
-        }
-        if ($request->filled('type_of_contract')) {
-            $query->byTypeOfContract($request->type_of_contract);
-        }
-        if ($request->filled('salary')) {
-            $query->bySalary($request->salary);
-        }
-        if ($request->filled('company_location')) {
-            $query->companyLocation($request->company_location);
-        }
-        if ($request->filled('application_deadline')) {
-            $query->byApplicationDeadline($request->application_deadline);
-        }
-        $sort= $request->input('sort', 'newest');
-        $results = $query->sortBy($sort)->paginate(10);
-        if ($results->isEmpty()) {
-            return response()->json(['message' => 'No job offers found'], 404);
-        }
-        return response()->json($results);
     }
-    
+
     /**
      * Show the form for creating a new resource.
      */
