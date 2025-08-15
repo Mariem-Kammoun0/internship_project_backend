@@ -3,28 +3,57 @@ import api from "./axiosInstance";
 const API_URL = "http://localhost:5000/api";
 
 export const getJobs = async ({ page = 1, search = '', filters = {} }) => {
+  if (page < 1) throw new Error('Page must be greater than 0');
+  if (typeof search !== 'string') throw new Error('Search must be a string');
   try {
-    const paramsObj = { page, search, ...filters };
+    const paramsObj = { page };
+    if (search) paramsObj.search = search;  // Only add if not empty
 
-    if (paramsObj.salary && typeof paramsObj.salary === 'object') {
-      paramsObj.salary_min = paramsObj.salary.min || '';
-      paramsObj.salary_max = paramsObj.salary.max || '';
-      delete paramsObj.salary;
-    }
-
-    if (paramsObj.requirements && Array.isArray(paramsObj.requirements)) {
-      paramsObj.requirements = paramsObj.requirements.join(',');
-    }
-
-    const params = new URLSearchParams(paramsObj).toString();
-    const res = await api.get(`${API_URL}/job-offers?${params}`);
+    // Handle filters
+    Object.entries(filters).forEach(([key, value]) => {
+      if (key === 'salary' && value && typeof value === 'object') {
+        if (value.min !== null && value.min !== '') paramsObj.salary_min = value.min;
+        if (value.max !== null && value.max !== '') paramsObj.salary_max = value.max;
+      } else if (key === 'requirements' && Array.isArray(value) && value.length > 0) {
+        paramsObj.requirements = value.join(',');
+      } else if (value !== '' && value !== null && value !== undefined) {
+        paramsObj[key] = value;
+      }
+    });
+    const params = new URLSearchParams();
+    Object.entries(paramsObj).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        params.append(key, String(value));
+      }
+    });
+    const queryString = params.toString();
+    const res = await api.get(`${API_URL}/job-offers${queryString ? `?${queryString}` : ''}`);
     return res.data;
-  } catch (err) {
-    console.error("Failed to fetch jobs:", err);
-    throw err;
+  }catch (err) {
+  if (!err.response) {
+    // Network error
+    throw new Error('Network error. Please check your connection.');
   }
-};
-
+  
+  switch (err.response.status) {
+    case 400:
+      throw new Error('Invalid request parameters.');
+    case 401:
+      throw new Error('Authentication required.');
+    case 403:
+      throw new Error('Access denied.');
+    case 404:
+      throw new Error('Jobs endpoint not found.');
+    case 429:
+      throw new Error('Too many requests. Please try again later.');
+    default:
+      if (err.response.status >= 500) {
+        throw new Error('Server error, please try again later.');
+      }
+      throw new Error(`Request failed with status ${err.response.status}`);
+  }
+}
+}
 
 export const createJob = async (jobData) => {
   try {
