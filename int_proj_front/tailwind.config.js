@@ -11,5 +11,11 @@ export default {
   daisyui: {
     themes: ["corporate", "dracula"],
     darkTheme: "dracula",
+    base:true,
+    styled:true,
+    utils:true,
+    prefix: "",
+    logs:true,
+    themeRoot:":root",
 }
 }
