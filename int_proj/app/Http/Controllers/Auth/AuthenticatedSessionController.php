@@ -33,9 +33,28 @@ class AuthenticatedSessionController extends Controller
 
         return response()->json([
                 'message' => 'Logged in successfully',
-                'user' => auth()->user(),
-            ]);    
+                'user' => $request->user()]            
+            );    
     }
+
+    public function apiLogin(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    if (!Auth::attempt($request->only('email', 'password'))) {
+        return response()->json(['message' => 'Invalid credentials'], 401);
+    }
+
+    $request->session()->regenerate(); // important for CSRF/session
+
+    return response()->json([
+        'user' => $request->user(),
+        'message' => 'Login successful'
+    ]);
+}
 
     /**
      * Destroy an authenticated session.

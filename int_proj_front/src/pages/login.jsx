@@ -15,13 +15,15 @@ function LoginPage() {
         setError("");
         
         try {
-            const response = await login({ email, password, rememberMe: true });
+            await login({ email, password, rememberMe: true });
             alert("Login successful!");
+            const user = await isAuthenticated();
             
-            if (response.token) {
-                navigate("/dashboard");
+            if (user) {
+                alert(`Login successful! Welcome ${user.name}`);
+            //navigate("/dashboard");
             } else {
-                navigate("/");
+                setError("Login failed. Please try again.");
             }
         } catch (err) {
             console.error("Login error:", err);

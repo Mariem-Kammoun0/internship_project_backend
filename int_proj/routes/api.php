@@ -6,6 +6,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\JobOfferController;
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -49,3 +51,10 @@ Route::get('/job-offers', [JobOfferController::class, 'indexForJobSeekers']);
 Route::get('/job-offers/company/{companyId}', [JobOfferController::class, 'getOffersByCompany']);
 Route::get('/companies', [CompanyController::class, 'index']);
 Route::get('/job-offers/{id}', [JobOfferController::class, 'show']);
+
+Route::post('/login', [AuthenticatedSessionController::class, 'apiLogin']);
+Route::middleware('auth:sanctum')->get('/user', function () {
+    return auth()->user();
+});
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:sanctum');
+
