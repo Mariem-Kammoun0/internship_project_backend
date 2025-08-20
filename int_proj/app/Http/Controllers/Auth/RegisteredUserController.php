@@ -49,8 +49,12 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-            if ($user->role === 'employer') {
-        return redirect()->route('employer.dashboard');
+        if ($request->wantsJson()) {
+            return response()->noContent();
+        }
+
+        if ($user->role === 'employer') {
+            return redirect()->route('employer.dashboard');
         }
 
         return redirect()->route('employee.dashboard');

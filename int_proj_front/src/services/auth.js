@@ -1,20 +1,24 @@
 import { authClient } from "./axiosInstance";
-const AUTH_URL = import.meta.env.VITE_AUTH_URL;
 
 
 export const register = async (userData) => {
-  const response = await authClient.post(`${AUTH_URL}/register`, userData);
+  // Ensure CSRF cookie is set before mutating request
+  await authClient.get(`/sanctum/csrf-cookie`);
+  const response = await authClient.post(`/register`, userData);
   return response.data;
 };
 
 export const login = async (credentials) => {
-  const response = await authClient.post(`${AUTH_URL}/login`, credentials);
+  // Ensure CSRF cookie is set before mutating request
+  await authClient.get(`/sanctum/csrf-cookie`);
+  const response = await authClient.post(`/login`, credentials);
   return response.data;
 };
 
 
 export const logout = async () => {
   try {
+    await authClient.get(`/sanctum/csrf-cookie`);
     await authClient.post('/logout');
   } catch (error) {
     console.log('Logout error:', error);

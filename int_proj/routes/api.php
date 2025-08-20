@@ -2,10 +2,14 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\JobOfferController;
 use App\Http\Controllers\ApplicationController;
+Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+    return $request->user();
+});
+
 
 
 Route::middleware(['auth:sanctum', 'employer'])->group(function () {
@@ -20,11 +24,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/user/profile', [UserController::class, 'updateUserProfile']);
 });
 
+// Employer-only routes for managing own company's job offers
 Route::middleware(['auth:sanctum', 'employer'])->group(function () {
-    Route::get('/job-offers', [JobOfferController::class, 'index']);
-    Route::post('/job-offers', [JobOfferController::class, 'store']);
-    Route::put('/job-offers/{id}', [JobOfferController::class, 'update']);
-    Route::delete('/job-offers/{id}', [JobOfferController::class, 'destroy']);
+    Route::get('/employer/job-offers', [JobOfferController::class, 'index']);
+    Route::post('/employer/job-offers', [JobOfferController::class, 'store']);
+    Route::put('/employer/job-offers/{id}', [JobOfferController::class, 'update']);
+    Route::delete('/employer/job-offers/{id}', [JobOfferController::class, 'destroy']);
 });
 
 Route::middleware(['auth:sanctum','employee'])->group(function () {
@@ -39,7 +44,7 @@ Route::middleware(['auth:sanctum', 'employer'])->group(function () {
     Route::delete('/applications/{offerId}/Applications/{applicationId}', [ApplicationController::class, 'rejectApplication']);
 });
 
-//public routes
+// Public routes for job seekers
 Route::get('/job-offers', [JobOfferController::class, 'indexForJobSeekers']);
 Route::get('/job-offers/company/{companyId}', [JobOfferController::class, 'getOffersByCompany']);
 Route::get('/companies', [CompanyController::class, 'index']);

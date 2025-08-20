@@ -1,5 +1,4 @@
 // services/jobService.js
-const API_URL = "http://localhost:5000/api";
 import { apiClient } from "./axiosInstance";
 
 export const getJobs = async ({ page = 1, search = '', filters = {} }) => {
@@ -27,7 +26,7 @@ export const getJobs = async ({ page = 1, search = '', filters = {} }) => {
       }
     });
     const queryString = params.toString();
-    const res = await apiClient.get(`${API_URL}/job-offers${queryString ? `?${queryString}` : ''}`);
+    const res = await apiClient.get(`/job-offers${queryString ? `?${queryString}` : ''}`);
     return res.data;
   }catch (err) {
   if (!err.response) {
@@ -57,7 +56,7 @@ export const getJobs = async ({ page = 1, search = '', filters = {} }) => {
 
 export const createJob = async (jobData) => {
   try {
-    const res = await apiClient.post(`${API_URL}/job-offers`, jobData);
+    const res = await apiClient.post(`/job-offers`, jobData);
     return res.data;
   } catch (err) {
     console.error("Failed to create job:", err);
@@ -67,7 +66,7 @@ export const createJob = async (jobData) => {
 
 export const updateJob = async (id, jobData) => {
   try {
-    const res = await apiClient.put(`${API_URL}/job-offers/${id}`, jobData);
+    const res = await apiClient.put(`/job-offers/${id}`, jobData);
     return res.data;
   } catch (err) {
     console.error(`Failed to update job ${id}:`, err);
@@ -77,7 +76,7 @@ export const updateJob = async (id, jobData) => {
 
 export const removeJob = async (id) => {
   try {
-    const res = await apiClient.delete(`${API_URL}/job-offers/${id}`);
+    const res = await apiClient.delete(`/job-offers/${id}`);
     return res.data;
   } catch (err) {
     console.error(`Failed to delete job ${id}:`, err);

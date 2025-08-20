@@ -1,6 +1,6 @@
 import axios from "axios";
-const API_URL = import.meta.env.VITE_API_URL;
-const AUTH_URL = import.meta.env.VITE_AUTH_URL;
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+const AUTH_URL = import.meta.env.VITE_AUTH_URL || "http://localhost:8000";
 
 
 const apiClient= axios.create({
@@ -9,6 +9,7 @@ const apiClient= axios.create({
     headers:{
         "Content-Type": "application/json",
         'accept':"application/json",
+        'X-Requested-With': 'XMLHttpRequest',
     }
 });
 
@@ -33,9 +34,17 @@ const getCsrfCookie = async () => {
 };
 
 authClient.interceptors.request.use(async (config) => {
-  if (!config.url.includes('/sanctum/csrf-cookie') && (['post', 'put', 'patch', 'delete'].includes(config.method.toLowerCase()))){
+  if (!config.url.includes('/sanctum/csrf-cookie') && (['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase() || ''))){
     await getCsrfCookie();
   }
+  // Ensure XSRF header is set from cookie explicitly
+  try {
+    const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+    if (match) {
+      const token = decodeURIComponent(match[1]);
+      config.headers['X-XSRF-TOKEN'] = token;
+    }
+  } catch (_e) {}
   return config;
 });
 

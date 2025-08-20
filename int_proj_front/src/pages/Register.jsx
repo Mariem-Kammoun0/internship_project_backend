@@ -37,7 +37,8 @@ function Registration() {
                 navigate("/");
         } catch (error) {
             console.error("Erreur lors de l'inscription :", error);
-            alert("Une erreur est survenue. Veuillez réessayer.");
+            console.log('Response data:', error.response?.data);
+            setError('Registration failed. Please try again.');
         } finally {
             setIsLoading(false);
         }

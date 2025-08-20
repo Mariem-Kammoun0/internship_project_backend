@@ -1,8 +1,8 @@
-import api from "./axiosInstance";
+import { apiClient } from "./axiosInstance";
 
-export const createCompany= api.post(`/company`);
-export const deleteCompany =api.delete(`/company`)
-export const updateCompany =api.put(`/company`)
-export const showCompany =api.get(`/company`)
+export const createCompany = (payload) => apiClient.post(`/company`, payload);
+export const deleteCompany = () => apiClient.delete(`/company`);
+export const updateCompany = (payload) => apiClient.put(`/company`, payload);
+export const showCompany = () => apiClient.get(`/company`);
 
-export const getCompanyById = (id) => api.get(`/companies/${id}`);
+export const getCompanyById = (id) => apiClient.get(`/companies/${id}`);
