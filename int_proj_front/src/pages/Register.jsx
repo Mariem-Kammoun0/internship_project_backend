@@ -3,28 +3,38 @@ import { register } from "../services/auth";
 import { Navigate, useNavigate } from "react-router-dom";
 
 function Registration() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [passwordVerif, setPasswordVerif] = useState("");
+     const [formData, setFormData] = useState({
+        name: "",
+        surname: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+        role: ""
+    });
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
+    const handleInputChange=(e)=>{
+        setFormData({
+            ...formData,
+            [e.target.name]:e.target.value
+        });
+    };
+
     const handleRegister = async (e) => {
         e.preventDefault();
-        if (password !== passwordVerif) {
+
+        if (formData.password !== formData.password_confirmation) {
             alert("Les mots de passe ne correspondent pas.");
             return;
         }
         
         setIsLoading(true);
+
         try {
-            const response = await register({ email, password });
-            if (response.status === 201) {
+            const response = await register(formData);
                 alert("Inscription réussie !");
                 navigate("/");
-            } else {
-                alert("Erreur lors de l'inscription.");
-            }
         } catch (error) {
             console.error("Erreur lors de l'inscription :", error);
             alert("Une erreur est survenue. Veuillez réessayer.");
@@ -49,6 +59,38 @@ function Registration() {
                 {/* Registration Form */}
                 <div className="bg-base-100 py-8 px-6 shadow-xl rounded-lg">
                     <form onSubmit={handleRegister} className="space-y-6">
+                        {/* Name Field */}
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text font-medium">First Name</span>
+                            </label>
+                            <input
+                                type="text"
+                                name="name"
+                                required
+                                value={formData.name}
+                                placeholder="Enter your first name"
+                                onChange={handleInputChange}
+                                className="input input-bordered w-full focus:input-primary"
+                            />
+                        </div>
+
+                        {/* Surname Field */}
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text font-medium">Last Name</span>
+                            </label>
+                            <input
+                                type="text"
+                                name="surname"
+                                required
+                                value={formData.surname}
+                                placeholder="Enter your last name"
+                                onChange={handleInputChange}
+                                className="input input-bordered w-full focus:input-primary"
+                            />
+                        </div>
+
                         {/* Email Field */}
                         <div className="form-control">
                             <label className="label">
@@ -56,12 +98,31 @@ function Registration() {
                             </label>
                             <input
                                 type="email"
+                                name="email"
                                 required
-                                value={email}
+                                value={formData.email}
                                 placeholder="your.email@example.com"
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={handleInputChange}
                                 className="input input-bordered w-full focus:input-primary"
                             />
+                        </div>
+
+                        {/* Role Selection */}
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text font-medium">I am a...</span>
+                            </label>
+                            <select
+                                name="role"
+                                required
+                                value={formData.role}
+                                onChange={handleInputChange}
+                                className="select select-bordered w-full focus:select-primary"
+                            >
+                                <option value="">Select your role</option>
+                                <option value="employer">Employer</option>
+                                <option value="employee">Employee</option>
+                            </select>
                         </div>
 
                         {/* Password Field */}
@@ -71,10 +132,11 @@ function Registration() {
                             </label>
                             <input
                                 type="password"
+                                name="password"
                                 required
-                                value={password}
+                                value={formData.password}
                                 placeholder="Enter your password"
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={handleInputChange}
                                 className="input input-bordered w-full focus:input-primary"
                             />
                         </div>
@@ -86,13 +148,14 @@ function Registration() {
                             </label>
                             <input
                                 type="password"
+                                name="password_confirmation"
                                 required
-                                value={passwordVerif}
+                                value={formData.password_confirmation}
                                 placeholder="Confirm your password"
-                                onChange={(e) => setPasswordVerif(e.target.value)}
+                                onChange={handleInputChange}
                                 className="input input-bordered w-full focus:input-primary"
                             />
-                            {password && passwordVerif && password !== passwordVerif && (
+                            {formData.password && formData.password_confirmation && formData.password !== formData.password_confirmation && (
                                 <label className="label">
                                     <span className="label-text-alt text-error">Passwords do not match</span>
                                 </label>
@@ -103,7 +166,7 @@ function Registration() {
                         <div className="form-control mt-6">
                             <button
                                 type="submit"
-                                disabled={isLoading || !email || !password || !passwordVerif || password !== passwordVerif}
+                                disabled={isLoading || !formData.name || !formData.surname || !formData.email || !formData.password || !formData.password_confirmation || !formData.role || formData.password !== formData.password_confirmation}
                                 className="btn btn-primary w-full"
                             >
                                 {isLoading ? (
@@ -118,10 +181,9 @@ function Registration() {
                         </div>
                     </form>
 
-                    {/* Divider */}
+                    {/* Rest of your component remains the same... */}
                     <div className="divider mt-6">or</div>
 
-                    {/* Social Login */}
                     <div className="space-y-3">
                         <button className="btn btn-outline w-full">
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -141,7 +203,6 @@ function Registration() {
                         </button>
                     </div>
 
-                    {/* Login Link */}
                     <div className="text-center mt-6">
                         <p className="text-sm text-base-content/60">
                             Already have an account?{" "}
@@ -155,5 +216,6 @@ function Registration() {
         </div>
     );
 }
+
 
 export default Registration;

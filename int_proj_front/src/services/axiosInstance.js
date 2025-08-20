@@ -18,28 +18,27 @@ const authClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-  }
+    'X-Requested-With': 'XMLHttpRequest',
+  },
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN' 
 });
 
 const getCsrfCookie = async () => {
-  await authClient.get('/sanctum/csrf-cookie');
+  try {
+    await authClient.get('/sanctum/csrf-cookie', { withCredentials: true });
+  } catch (error) {
+    console.error('Failed to get CSRF cookie:', error);
+  }
 };
 
 authClient.interceptors.request.use(async (config) => {
-  if (['post', 'put', 'patch', 'delete'].includes(config.method.toLowerCase())) {
+  if (!config.url.includes('/sanctum/csrf-cookie') && (['post', 'put', 'patch', 'delete'].includes(config.method.toLowerCase()))){
     await getCsrfCookie();
   }
   return config;
 });
 
-
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
 
 apiClient.interceptors.response.use(
   (response) => response,
