@@ -1,7 +1,7 @@
-import JobCard from "../components/JobCard";
-import { getJobs } from "../services/jobService";
+import JobCard from "../../components/JobCard";
+import { getJobs } from "../../services/jobService";
 import { useEffect, useState } from "react";
-import JobFilter from "../components/JobFilter";
+import JobFilter from "../../components/JobFilter";
 
 function JobOffers() {
     const [offers, setOffers] = useState([]);

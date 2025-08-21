@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ApplicationFilter from "../components/ApplicationFilter";
-import ApplicationCard from "../components/ApplicationCard";
+import ApplicationFilter from "../../components/ApplicationFilter";
+import ApplicationCard from "../../components/ApplicationCard";
 // import { getApplications, withdrawApplication, updateApplicationStatus } from "../services/applicationService";
 
 function Applications() {

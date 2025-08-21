@@ -104,7 +104,7 @@ function Home() {
                             <p className="text-sm">Explore all available positions</p>
                             <div className="card-actions justify-center mt-4">
                                 <button 
-                                    onClick={() => navigate('/jobs')}
+                                    onClick={() => navigate('/job-offers')}
                                     className="btn btn-primary btn-sm"
                                 >
                                     View All Jobs
@@ -120,7 +120,7 @@ function Home() {
                             <p className="text-sm">Build your professional profile</p>
                             <div className="card-actions justify-center mt-4">
                                 <button 
-                                    onClick={() => navigate('/profile')}
+                                    onClick={() => navigate('/register')}
                                     className="btn btn-secondary btn-sm"
                                 >
                                     Get Started
