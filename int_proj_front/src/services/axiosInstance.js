@@ -48,6 +48,16 @@ authClient.interceptors.request.use(async (config) => {
   return config;
 });
 
+authClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 419) {
+      // CSRF token mismatch - refresh and retry
+      console.log('CSRF token mismatch, refreshing...');
+    }
+    return Promise.reject(error);
+  }
+);
 
 apiClient.interceptors.response.use(
   (response) => response,

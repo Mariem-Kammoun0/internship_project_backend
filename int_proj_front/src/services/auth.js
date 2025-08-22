@@ -9,7 +9,6 @@ export const register = async (userData) => {
 };
 
 export const login = async (credentials) => {
-  // Ensure CSRF cookie is set before mutating request
   await authClient.get(`/sanctum/csrf-cookie`);
   const response = await authClient.post(`/login`, credentials);
   return response.data.user
@@ -30,7 +29,7 @@ export const isAuthenticated = async () => {
     const response = await authClient.get("/api/user"); 
     return response.data;
   } catch (error) {
+    console.log('Auth check failed:', error.response?.status, error.response?.data);
     return null;
   }
 };
-

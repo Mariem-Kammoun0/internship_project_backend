@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('job_offers', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->string('title');
             $table->text('description');
             $table->decimal('salary', 10, 2)->nullable();
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('requirements')->nullable();
             $table->date('application_deadline')->nullable();
             $table->boolean('motivation_letter_required')->default(false);
-            $table->foreignUuid('company_id')->constrained('companies')->onDelete('cascade');
+            $table->foreignId('company_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

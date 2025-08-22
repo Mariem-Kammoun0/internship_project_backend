@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('companies', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->string('name');
             $table->string('address')->nullable();
             $table->string('phone')->nullable();
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('logo')->nullable();
             $table->date('founded_at')->nullable();
-            $table->foreignUuid('employer_id')->nullable()->constrained('users' )->nullOnDelete();
+            $table->foreignId('employer_id')->nullable()->constrained('users')->onDelete('set null');
             $table->integer('size')->default(1);
             $table->timestamps();
         });

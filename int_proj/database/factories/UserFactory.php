@@ -24,7 +24,6 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-        'id' => Str::uuid(),
         'name' => $this->faker->firstName(),
         'surname' => $this->faker->lastName(),
         'email' => $this->faker->unique()->safeEmail(),
@@ -70,5 +69,5 @@ class UserFactory extends Factory
             ];
         });
     }
-    
+
 }

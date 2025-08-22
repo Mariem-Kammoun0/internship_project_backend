@@ -8,12 +8,6 @@ use App\Http\Controllers\JobOfferController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-
-
 Route::middleware(['auth:sanctum', 'employer'])->group(function () {
     Route::post('/company', [CompanyController::class, 'store']);
     Route::get('/company', [CompanyController::class, 'showMyCompany']);
@@ -22,7 +16,7 @@ Route::middleware(['auth:sanctum', 'employer'])->group(function () {
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/user/profile', [UserController::class, 'showUserProfile']);
+    Route::get('/use/profile', [UserController::class, 'showUserProfile']);
     Route::put('/user/profile', [UserController::class, 'updateUserProfile']);
 });
 
@@ -53,8 +47,13 @@ Route::get('/companies', [CompanyController::class, 'index']);
 Route::get('/job-offers/{id}', [JobOfferController::class, 'show']);
 
 Route::post('/login', [AuthenticatedSessionController::class, 'apiLogin']);
+
 Route::middleware('auth:sanctum')->get('/user', function () {
     return auth()->user();
 });
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:sanctum');
 
+Route::post('/register', [RegisteredUserController::class, 'store']);
+// Route::get('/sanctum/csrf-cookie', function () {
+//     return response()->json(['message' => 'CSRF cookie set']);
+// });

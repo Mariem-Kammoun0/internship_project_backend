@@ -21,7 +21,6 @@ class CompanyFactory extends Factory
     public function definition(): array
     {
         return [
-        'id' => Str::uuid(),
         'name' => $this->faker->company(),
         'address' => $this->faker->address(),
         'phone' => $this->faker->phoneNumber(),

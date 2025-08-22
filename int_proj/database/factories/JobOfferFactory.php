@@ -17,7 +17,6 @@ class JobOfferFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => $this->faker->uuid(),
             'title' => $this->faker->jobTitle(),
             'description' => $this->faker->paragraph(),
             'salary' => $this->faker->numberBetween(30000, 120000),
@@ -42,5 +41,5 @@ class JobOfferFactory extends Factory
             ];
         });
     }
-    
+
 }

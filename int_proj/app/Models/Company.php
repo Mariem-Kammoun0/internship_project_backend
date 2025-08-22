@@ -12,8 +12,6 @@ use App\Models\Job;
 class Company extends Model
 {
     use HasFactory;
-    public $incrementing = false; 
-    protected $keyType = 'string';
 
     protected $fillable=[
         'name',
@@ -32,7 +30,7 @@ class Company extends Model
      */
     public function employees(): HasMany
         {
-            return $this->hasMany(User::class, 'company_id'); 
+            return $this->hasMany(User::class, 'company_id');
         }
 
     /**
@@ -81,11 +79,11 @@ class Company extends Model
      * @return void
      */
 
-    public static function boot()
-    {
-        parent::boot();
-        static::creating(function ($model) {
-            $model->id = (string) \Illuminate\Support\Str::uuid();
-        });
-    }
+    // public static function boot()
+    // {
+    //     parent::boot();
+    //     static::creating(function ($model) {
+    //         $model->id = (string) \Illuminate\Support\Str::uuid();
+    //     });
+    // }
 }

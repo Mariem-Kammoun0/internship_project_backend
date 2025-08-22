@@ -12,8 +12,6 @@ use App\Models\Application;
 class JobOffer extends Model
 {
     use HasFactory;
-    public $incrementing = false; 
-    protected $keyType = 'string';
 
     protected $fillable = [
         'title',
@@ -32,7 +30,7 @@ class JobOffer extends Model
     {
         return $this->belongsTo(Company::class,  'company_id', 'id');
     }
- 
+
     public function applications()
     {
         return $this->hasMany(Application::class);
@@ -62,11 +60,11 @@ class JobOffer extends Model
             'freelance' => 'Freelance',
             default => 'undefined',
         };
-    }    
+    }
 
 
     //define scopes for filtering job offers
-    
+
      public function scopeTitle($q, string $title)
     {
         return $title ? $q->where('title', 'like', "%{$title}%") : $q;
@@ -100,10 +98,10 @@ class JobOffer extends Model
     }
 
     public function scopeActive($q)
-    { 
+    {
         return $q->where('application_deadline', '>', now());
     }
-     
+
     public function scopeCompany($query, $companyId)
     {
 
@@ -144,14 +142,14 @@ class JobOffer extends Model
      * @return void
      */
 
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        static::creating(function ($jobOffer) {
-            if (!$jobOffer->id) {
-                $jobOffer->id = (string) \Illuminate\Support\Str::uuid();
-            }
-        });
-    }
+    //     static::creating(function ($jobOffer) {
+    //         if (!$jobOffer->id) {
+    //             $jobOffer->id = (string) \Illuminate\Support\Str::uuid();
+    //         }
+    //     });
+    // }
 }

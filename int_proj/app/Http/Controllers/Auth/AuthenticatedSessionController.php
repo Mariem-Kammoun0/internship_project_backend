@@ -14,14 +14,6 @@ use Illuminate\Http\JsonResponse;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
-     */
-    public function create(): View
-    {
-        return view('auth.login');
-    }
-
-    /**
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): JsonResponse
@@ -33,40 +25,30 @@ class AuthenticatedSessionController extends Controller
 
         return response()->json([
                 'message' => 'Logged in successfully',
-                'user' => $request->user()]            
-            );    
+                'user' => $request->user()]
+            );
     }
 
     public function apiLogin(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
-
-    if (!Auth::attempt($request->only('email', 'password'))) {
-        return response()->json(['message' => 'Invalid credentials'], 401);
-    }
-
-    $request->session()->regenerate(); // important for CSRF/session
-
-    return response()->json([
-        'user' => $request->user(),
-        'message' => 'Login successful'
-    ]);
-}
-
-    /**
-     * Destroy an authenticated session.
-     */
-    public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-        $request->session()->invalidate();
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
+        }
 
-        $request->session()->regenerateToken();
+            $user = Auth::user();
 
-        return redirect('/');
+        // 🔑 Création d’un token API
+        $token = $user->createToken('frontend')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful',
+            'user' => $user,
+            'token' => $token,
+        ]);
     }
 }

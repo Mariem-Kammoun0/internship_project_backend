@@ -17,7 +17,6 @@ class ApplicationFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => $this->faker->uuid(),
             'job_offer_id' => null,
             'user_id' => null,
             'motivation_letter' => $this->faker->paragraph(),

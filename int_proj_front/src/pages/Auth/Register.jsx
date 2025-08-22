@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { register } from "../../services/auth";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Registration() {
-     const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState({
         name: "",
         surname: "",
         email: "",
@@ -12,20 +12,24 @@ function Registration() {
         role: ""
     });
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(""); // Added missing error state
     const navigate = useNavigate();
 
-    const handleInputChange=(e)=>{
+    const handleInputChange = (e) => {
         setFormData({
             ...formData,
-            [e.target.name]:e.target.value
+            [e.target.name]: e.target.value
         });
+        // Clear error when user starts typing
+        if (error) setError("");
     };
 
     const handleRegister = async (e) => {
         e.preventDefault();
+        setError(""); // Clear previous errors
 
         if (formData.password !== formData.password_confirmation) {
-            alert("Les mots de passe ne correspondent pas.");
+            setError("Les mots de passe ne correspondent pas.");
             return;
         }
         
@@ -33,12 +37,23 @@ function Registration() {
 
         try {
             const response = await register(formData);
-                alert("Inscription réussie !");
-                navigate("/");
+            alert("Inscription réussie !");
+            navigate("/");
         } catch (error) {
             console.error("Erreur lors de l'inscription :", error);
             console.log('Response data:', error.response?.data);
-            setError('Registration failed. Please try again.');
+            
+            // Better error handling based on response
+            if (error.response?.data?.message) {
+                setError(error.response.data.message);
+            } else if (error.response?.data?.errors) {
+                // Handle validation errors from Laravel
+                const errors = error.response.data.errors;
+                const errorMessages = Object.values(errors).flat();
+                setError(errorMessages.join(", "));
+            } else {
+                setError('Registration failed. Please try again.');
+            }
         } finally {
             setIsLoading(false);
         }
@@ -59,6 +74,16 @@ function Registration() {
 
                 {/* Registration Form */}
                 <div className="bg-base-100 py-8 px-6 shadow-xl rounded-lg">
+                    {/* Error Alert */}
+                    {error && (
+                        <div className="alert alert-error mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>{error}</span>
+                        </div>
+                    )}
+
                     <form onSubmit={handleRegister} className="space-y-6">
                         {/* Name Field */}
                         <div className="form-control">
@@ -182,7 +207,6 @@ function Registration() {
                         </div>
                     </form>
 
-                    {/* Rest of your component remains the same... */}
                     <div className="divider mt-6">or</div>
 
                     <div className="space-y-3">
@@ -217,6 +241,5 @@ function Registration() {
         </div>
     );
 }
-
 
 export default Registration;
