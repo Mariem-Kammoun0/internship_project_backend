@@ -29,7 +29,7 @@ class RegisteredUserController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
-                'status' => 'active', // Set default status
+                'status' => 'unemployed',
             ]);
 
             event(new Registered($user));
@@ -48,11 +48,11 @@ class RegisteredUserController extends Controller
                 ], 201);
             }
 
-            // For web requests
             Auth::login($user);
-            return redirect()->intended('/dashboard');
+            return ;
 
         } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::alert($e->getMessage());
             if ($request->expectsJson()) {
                 return response()->json([
                     'message' => 'Validation failed',
@@ -62,6 +62,7 @@ class RegisteredUserController extends Controller
             throw $e;
         } catch (\Exception $e) {
             if ($request->expectsJson()) {
+                \Log::alert($e->getMessage());
                 return response()->json([
                     'message' => 'Registration failed',
                     'error' => $e->getMessage()

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\User;
-use App\Models\Job;
+use App\Models\JobOffer;
 
 class Company extends Model
 {
@@ -36,9 +36,9 @@ class Company extends Model
     /**
      * Get the jobs associated with the company.
      */
-    public function jobs(): HasMany
+    public function jobOffers(): HasMany
         {
-            return $this->hasMany(Job::class);
+            return $this->hasMany(JobOffer::class, 'company_id', 'id');
         }
 
     /**
@@ -73,17 +73,4 @@ class Company extends Model
         return $query->where('name', 'like', '%' . $name . '%');
     }
 
-    /**
-     * The "booting" method of the model.
-     * This ensures that a UUID is generated for the company.
-     * @return void
-     */
-
-    // public static function boot()
-    // {
-    //     parent::boot();
-    //     static::creating(function ($model) {
-    //         $model->id = (string) \Illuminate\Support\Str::uuid();
-    //     });
-    // }
 }

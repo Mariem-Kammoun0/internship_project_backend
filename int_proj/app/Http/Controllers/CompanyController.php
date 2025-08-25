@@ -12,23 +12,23 @@ class CompanyController extends Controller
     {
         $query = Company::query();
         if ($request->filled('name')) {
-            $query()->byName($request->name);
+            $query->byName($request->name);
         }
         if ($request->filled('industry')) {
-            $query()->byIndustry($request->name);
+            $query->byIndustry($request->industry);
         }
         if ($request->filled('size')) {
-            $query()->bySize($request->size);        
+            $query->bySize($request->size);
         }
         if ($request->filled('location')) {
-            $query()->byLocation($request->location);
+            $query->byLocation($request->location);
         }
-        $results = JobOffer::query()->paginate(10);
+        $results = $query->paginate(10);
 
         if ($results->isEmpty()) {
             return response()->json(['message' => 'No companies found'], 404);
         }
-        
+
         return response()->json($results);
     }
 
@@ -36,7 +36,7 @@ class CompanyController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreCompanyRequest $request)
-    {   
+    {
         $user = auth()->user();
         if ($user->company_id) {
             return response()->json(['message' => 'please create another account to create another company'], 400);

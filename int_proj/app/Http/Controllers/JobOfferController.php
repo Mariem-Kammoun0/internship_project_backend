@@ -119,7 +119,7 @@ class JobOfferController extends Controller
 
         return response()->json(['message' => 'Job offer updated successfully', 'job_offer' => $jobOffer]);
     }
-    
+
 
     /**
      * Remove the specified resource from storage.
@@ -131,7 +131,7 @@ class JobOfferController extends Controller
         if (!$jobOffer) {
             return response()->json(['message' => 'Job offer not found'], 404);
         }
-        
+
         if ($jobOffer->company_id !== auth()->user()->company_id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -140,4 +140,18 @@ class JobOfferController extends Controller
 
         return response()->json(['message' => 'Job offer deleted successfully']);
     }
+
+    public function getOffersByCompany(string $id){
+        $company = Company::find($id);
+        if (!$company) {
+            return response()->json(['message' => 'Company not found'], 404);
+        }
+        $results= $company->joboffers()->paginate(10);
+        if($results->isEmpty()){
+            return response()->json(['message' => 'No job offers found for this company'], 404);
+        }
+
+        return  response()->json($results);
+    }
 }
+

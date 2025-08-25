@@ -13,22 +13,6 @@ use Illuminate\Http\JsonResponse;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function store(LoginRequest $request): JsonResponse
-    {
-        $request->authenticate();
-
-        $request->session()->regenerate();
-
-
-        return response()->json([
-                'message' => 'Logged in successfully',
-                'user' => $request->user()]
-            );
-    }
-
     public function apiLogin(Request $request)
     {
         $request->validate([
@@ -42,7 +26,6 @@ class AuthenticatedSessionController extends Controller
 
             $user = Auth::user();
 
-        // 🔑 Création d’un token API
         $token = $user->createToken('frontend')->plainTextToken;
 
         return response()->json([

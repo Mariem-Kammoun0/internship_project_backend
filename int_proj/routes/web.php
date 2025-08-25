@@ -28,17 +28,13 @@ use Illuminate\Support\Facades\Auth;
 
 
 // //mailing test
-// Route::get('/test-email', function () {
-//     Mail::raw('This is a test email from Laravel.', function ($message) {
-//         $message->to('your_email@example.com')
-//                 ->subject('Test Email');
-//     });
+ Route::get('/test-email', function () {
+    Mail::raw('This is a test email from Laravel.', function ($message) {
+         $message->to('mariemkammoun01@gmail.com')
+                 ->subject('Test Email');
+     });
 
-//     return 'Test email sent!';
-// });
+     return 'Test email sent!';
+ });
 
 // require __DIR__.'/auth.php';
-
-Route::get('/', function () {
-    return view('welcome');
-});

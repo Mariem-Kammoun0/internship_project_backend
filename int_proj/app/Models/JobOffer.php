@@ -135,21 +135,4 @@ class JobOffer extends Model
                 return $query;
         }
     }
-
-    /**
-     * The "booting" method of the model.
-     *
-     * @return void
-     */
-
-    // protected static function boot()
-    // {
-    //     parent::boot();
-
-    //     static::creating(function ($jobOffer) {
-    //         if (!$jobOffer->id) {
-    //             $jobOffer->id = (string) \Illuminate\Support\Str::uuid();
-    //         }
-    //     });
-    // }
 }

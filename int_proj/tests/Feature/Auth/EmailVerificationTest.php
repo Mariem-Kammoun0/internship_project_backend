@@ -33,6 +33,7 @@ class EmailVerificationTest extends TestCase
             now()->addMinutes(60),
             ['id' => $user->id, 'hash' => sha1($user->email)]
         );
+        $verificationUrl = 'http://localhost:5173/register/verify-email?signature='.sha1('wrong-email').'&expires='.now()->addMinutes(60);
 
         $response = $this->actingAs($user)->get($verificationUrl);
 
@@ -50,6 +51,7 @@ class EmailVerificationTest extends TestCase
             now()->addMinutes(60),
             ['id' => $user->id, 'hash' => sha1('wrong-email')]
         );
+        $verificationUrl = 'http://localhost:5173/register/verify-email?signature='.sha1('wrong-email').'&expires='.now()->addMinutes(60);
 
         $this->actingAs($user)->get($verificationUrl);
 

@@ -7,16 +7,17 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\JobOfferController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 Route::middleware(['auth:sanctum', 'employer'])->group(function () {
     Route::post('/company', [CompanyController::class, 'store']);
-    Route::get('/company', [CompanyController::class, 'showMyCompany']);
+    Route::get('/company', [CompanyController::class, 'show']);
     Route::put('/company', [CompanyController::class, 'update']);
-    Route::delete('/company', [CompanyController::class, 'destroyMyCompany']);
+    Route::delete('/company', [CompanyController::class, 'destroy']);
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/use/profile', [UserController::class, 'showUserProfile']);
+    Route::get('/user/profile', [UserController::class, 'showUserProfile']);
     Route::put('/user/profile', [UserController::class, 'updateUserProfile']);
 });
 
@@ -48,12 +49,10 @@ Route::get('/job-offers/{id}', [JobOfferController::class, 'show']);
 
 Route::post('/login', [AuthenticatedSessionController::class, 'apiLogin']);
 
-Route::middleware('auth:sanctum')->get('/user', function () {
-    return auth()->user();
-});
+//Route::middleware('auth:sanctum')->get('/user', function () {
+//    return auth()->user();
+//});
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:sanctum');
 
 Route::post('/register', [RegisteredUserController::class, 'store']);
-// Route::get('/sanctum/csrf-cookie', function () {
-//     return response()->json(['message' => 'CSRF cookie set']);
-// });
+

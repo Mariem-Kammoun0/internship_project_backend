@@ -56,20 +56,6 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    // protected static function boot()
-    // {
-    //     parent::boot();
-
-    //     static::creating(function ($user) {
-    //         if (!$user->id) {
-    //             $user->id = (string) \Illuminate\Support\Str::uuid();
-    //         }
-    //     });
-    // }
-
-    /**
-     * Get the company that owns the user.
-     */
     public function company()
     {
         return $this->belongsTo(Company::class);
