@@ -73,7 +73,7 @@ class CompanyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCompanyRequest $request, string $id)
+    public function update(UpdateCompanyRequest $request)
     {
         $company = auth()->user()->company;
         if (!$company) {
@@ -89,9 +89,10 @@ class CompanyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy()
     {
-        $company=user()->auth()->company;
+        $user = auth()->user();
+        $company = $user->company;
         if (!$company) {
             return response()->json(['message' => 'Company not found'], 404);
         }

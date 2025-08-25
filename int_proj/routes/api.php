@@ -8,8 +8,12 @@ use App\Http\Controllers\JobOfferController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Middleware\IsEmployer;
+use App\Http\Middleware\IsEmployee;
 
-Route::middleware(['auth:sanctum', 'employer'])->group(function () {
+
+
+Route::middleware(['auth:sanctum', IsEmployer::class])->group(function () {
     Route::post('/company', [CompanyController::class, 'store']);
     Route::get('/company', [CompanyController::class, 'show']);
     Route::put('/company', [CompanyController::class, 'update']);
@@ -22,23 +26,23 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 // Employer-only routes for managing own company's job offers
-Route::middleware(['auth:sanctum', 'employer'])->group(function () {
+Route::middleware(['auth:sanctum',IsEmployer::class])->group(function () {
     Route::get('/employer/job-offers', [JobOfferController::class, 'index']);
     Route::post('/employer/job-offers', [JobOfferController::class, 'store']);
     Route::put('/employer/job-offers/{id}', [JobOfferController::class, 'update']);
     Route::delete('/employer/job-offers/{id}', [JobOfferController::class, 'destroy']);
 });
 
-Route::middleware(['auth:sanctum','employee'])->group(function () {
-    Route::post('/applications/{offerId}', [ApplicationController::class, 'store']);
-    Route::get('/my-applications', [ApplicationController::class, 'myApplications']);
-    Route::put('/applications/{id}/motivation-letter', [ApplicationController::class, 'addMotivationLetter']);
-    Route::delete('/applications/{id}', [ApplicationController::class, 'destroy']);
+Route::middleware(['auth:sanctum',IsEmployee::class])->group(function () {
+    Route::post('/employee/applications/{offerId}', [ApplicationController::class, 'store']);
+    Route::get('/employee/my-applications', [ApplicationController::class, 'myApplications']);
+    Route::put('/employee/applications/{id}/motivation-letter', [ApplicationController::class, 'addMotivationLetter']);
+    Route::delete('/employee/applications/{id}', [ApplicationController::class, 'destroy']);
 });
 
-Route::middleware(['auth:sanctum', 'employer'])->group(function () {
-    Route::get('/applications/{offerId}/Applications', [ApplicationController::class, 'index']);
-    Route::delete('/applications/{offerId}/Applications/{applicationId}', [ApplicationController::class, 'rejectApplication']);
+Route::middleware(['auth:sanctum',IsEmployer::class])->group(function () {
+    Route::get('/employer/applications/{offerId}', [ApplicationController::class, 'index']);
+    Route::delete('/employer/applications/{offerId}/{applicationId}', [ApplicationController::class, 'rejectApplication']);
 });
 
 // Public routes for job seekers

@@ -44,8 +44,8 @@ class JobOffer extends Model
     public function getEmploymentTypeLabelAttribute()
     {
         return match ($this->employment_type) {
-            'full_time' => 'Full Time',
-            'part_time' => 'Part Time',
+            'full-time' => 'Full Time',
+            'part-time' => 'Part Time',
             'contract' => 'Contract',
             'temporary' => 'Temporary',
             default => 'undefined',
@@ -56,7 +56,7 @@ class JobOffer extends Model
     {
         return match ($this->type_of_contract) {
             'permanent' => 'Permanent',
-            'fixed_term' => 'Fixed Term',
+            'fixed-term' => 'Fixed Term',
             'freelance' => 'Freelance',
             default => 'undefined',
         };

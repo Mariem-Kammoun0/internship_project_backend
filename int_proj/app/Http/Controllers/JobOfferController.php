@@ -20,7 +20,10 @@ class JobOfferController extends Controller
         if (!$company) {
             return response()->json(['message' => 'Company not found'], 404);
         }
-        $jobOffers = $company->jobs;
+        $jobOffers = $company->jobOffers;
+        if ($jobOffers->isEmpty()) {
+            return response()->json(['message' => 'No job offers found'], 404);
+    }
         return response()->json($jobOffers);
     }
 
@@ -82,7 +85,7 @@ class JobOfferController extends Controller
             if (!$company) {
                 return response()->json(['message' => 'Company not found'], 404);
             }
-            $jobOffer = $company->jobs()->create($request->validated());
+            $jobOffer = $company->jobOffers()->create($request->validated());
             $jobOffer['company_id'] = $company->id;
             return response()->json(['message' => 'Job offer created successfully', 'job_offer' => $jobOffer], 201);
 

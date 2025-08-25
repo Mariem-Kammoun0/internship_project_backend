@@ -64,7 +64,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-        // Your custom middleware alias:
+        // custom middleware alias:
         'employer' => \App\Http\Middleware\IsEmployer::class,
         'employee' => \App\Http\Middleware\IsEmployee::class,
     ];

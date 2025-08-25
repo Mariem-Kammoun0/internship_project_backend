@@ -46,7 +46,7 @@ class ApplicationController extends Controller
         if ($alreadyApplied) {
             return response()->json([
                 'message' => 'You have already applied to this job offer.'
-            ], 409); 
+            ], 409);
         }
 
         $validated = $request->validate([
@@ -57,7 +57,7 @@ class ApplicationController extends Controller
         $application->job_offer_id = $offerId;
         $application->user_id = $user->id;
         $application->motivation_letter = $validated['motivation_letter'] ?? null;
-        
+
 
         $application->save();
         return response()->json([
@@ -72,8 +72,8 @@ class ApplicationController extends Controller
      */
     public function myApplications()
     {
-        $user = auth()->user();
-        $applications = Application::where('user_id', $user->id)->get();
+        $userId = auth()->user()->id;
+        $applications = Application::where('user_id', $userId)->get();
         if ($applications->isEmpty()) {
             return response()->json(['message' => 'No applications found for this user'], 404);
         }
@@ -85,7 +85,10 @@ class ApplicationController extends Controller
      */
     public function addMotivationLetter(Request $request, string $id){
         $application = Application::find($id);
-
+        $userId=auth()->user()->id;
+        if ($application->user_id!=$userId){
+            return response()->json(['message' => 'this is not your application to modify'], 403);
+        }
         if (!$application) {
             return response()->json(['message' => 'Application not found'], 404);
         }
@@ -123,23 +126,34 @@ class ApplicationController extends Controller
     /**
      * Reject an application.
      */
-    public function rejectApplication(string $offerId, string $applicationId)
+    public function rejectApplication(int $offerId, string $applicationId)
     {
+
         $jobOffer = JobOffer::find($offerId);
         if (!$jobOffer) {
             return response()->json(['message' => 'Job offer not found'], 404);
         }
         $application = Application::find($applicationId);
+
         if (!$application) {
             return response()->json(['message' => 'Application not found'], 404);
         }
-        if ($application->job_offer_id !== $offerId) {
-            return response()->json(['message' => 'Application does not belong to this job offer'], 400);
+
+        $company = auth()->user()->company;
+        if ($jobOffer->company_id !== $company->id) {
+            return response()->json(['message' => 'Forbidden'], 403);
         }
-        
+
+        $id= $application->job_offer_id;
+        if ($id!== $offerId) {
+            return response()->json([
+                'message' => 'Application does not belong to this job offer'
+            ], 400);
+        }
+
         $application->delete();
         return response()->json([
-            'message' => 
+            'message' =>
             'Application rejected successfully']);
         }
 }

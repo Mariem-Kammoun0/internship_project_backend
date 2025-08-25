@@ -33,5 +33,32 @@ class AuthenticatedSessionController extends Controller
             'user' => $user,
             'token' => $token,
         ]);
+
+        return response()->json(['message' => 'Invalid credentials'], 401);
     }
+
+public function destroy(Request $request)
+{
+    try {
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Not authenticated'], 401);
+        }
+
+        // Supprimer tous les tokens
+        $user->tokens()->delete();
+
+        return response()->json([
+            'message' => 'Logged out successfully'
+        ]);
+
+    } catch (\Exception $e) {
+        \Log::error('Logout error: ' . $e->getMessage());
+        return response()->json([
+            'message' => 'Logout failed',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
 }
