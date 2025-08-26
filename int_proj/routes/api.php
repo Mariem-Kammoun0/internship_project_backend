@@ -53,9 +53,9 @@ Route::get('/job-offers/{id}', [JobOfferController::class, 'show']);
 
 Route::post('/login', [AuthenticatedSessionController::class, 'apiLogin']);
 
-//Route::middleware('auth:sanctum')->get('/user', function () {
-//    return auth()->user();
-//});
+Route::middleware('auth:sanctum')->get('/user', function () {
+    return auth()->user();
+});
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:sanctum');
 
 Route::post('/register', [RegisteredUserController::class, 'store']);

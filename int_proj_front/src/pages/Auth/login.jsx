@@ -7,6 +7,7 @@ function LoginPage() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
     const navigate = useNavigate();
     
     const handleLogin = async (e) => {
@@ -15,13 +16,13 @@ function LoginPage() {
         setError("");
         
         try {
-            await login({ email, password, rememberMe: true });
+            await login({ email, password, rememberMe});
             alert("Login successful!");
             const user = await isAuthenticated();
             
             if (user) {
                 alert(`Login successful! Welcome ${user.name}`);
-            //navigate("/dashboard");
+                navigate("/");
             } else {
                 setError("Login failed. Please try again.");
             }
@@ -90,6 +91,18 @@ function LoginPage() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="input input-bordered w-full focus:input-primary"
                             />
+                        </div>
+                         {/* Remember Me ✅ */}
+                        <div className="form-control">
+                        <label className="cursor-pointer label">
+                            <span className="label-text">Remember Me</span>
+                            <input
+                            type="checkbox"
+                            className="checkbox"
+                            checked={rememberMe}
+                            onChange={(e) => setRememberMe(e.target.checked)}
+                            />
+                        </label>
                         </div>
 
                         {/* Submit Button */}

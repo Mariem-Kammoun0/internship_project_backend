@@ -1,11 +1,22 @@
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/interview.png';
+import { isAuthenticated } from "../services/auth";
+import { useState, useEffect } from "react";
 
-export default function NavBar({ user }) {
+export default function NavBar() {
   const location = useLocation();
-
+  const [user, setUser] = useState(null);
+  
+  useEffect(()=>{
+    const fetchUser = async()=>{
+      const user=await isAuthenticated();
+      setUser(user);
+    };
+  fetchUser();
+  },[]);
+  
   let navigation = [
-    { name: 'Accueil', href: '/Welcome' },
+    { name: 'Accueil', href: '/' },
     { name: 'Contact', href: '/contact' },
     { name: 'Entreprises', href: '/companies' },
     { name: 'Offres', href: '/job-offers' },
@@ -13,8 +24,8 @@ export default function NavBar({ user }) {
     { name: 'Inscription', href: '/register' },
   ];
 
-  if (user?.authenticated) {
-    if (user.role === 'admin') {
+  if (user) {
+    if (user.role === 'employer') {
       navigation = [
         { name: 'Tableau de bord', href: '/dashboard' },
         { name: 'Créer offre', href: '/job-create' },
@@ -41,7 +52,7 @@ export default function NavBar({ user }) {
     <div className="navbar bg-base-200 px-4 lg:px-6 shadow-sm">
       {/* Logo et nom */}
       <div className="flex-1">
-        <Link to="/Welcome" className="flex items-center gap-3">
+        <Link to="/" className="flex items-center gap-3">
           <div className="avatar">
             <div className="w-10 h-10">
               <img
