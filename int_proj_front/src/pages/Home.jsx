@@ -9,7 +9,7 @@ function Home() {
         e.preventDefault();
         if (searchQuery.trim()) {
             // Navigate to job offers page with search query
-            navigate(`/jobs?search=${encodeURIComponent(searchQuery.trim())}`);
+            navigate(`/job-offers?search=${encodeURIComponent(searchQuery.trim())}`);
         }
     };
 
