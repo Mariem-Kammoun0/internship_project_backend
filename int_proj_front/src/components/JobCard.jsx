@@ -1,4 +1,9 @@
+import { useNavigate } from "react-router-dom";
+
 function JobCard({ jobOffer }) {
+
+  const navigate = useNavigate();
+
   // Fonction pour formater la date
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -89,9 +94,8 @@ function JobCard({ jobOffer }) {
           </div>
         </div>
 
-        {/* Bouton Voir Plus */}
         <div className="card-actions justify-end mt-4">
-          <button className="btn btn-warning btn-sm">
+          <button className="btn btn-warning btn-sm" onClick={() => navigate(`/job-offers/${jobOffer.id}`)}>
             Voir Plus
           </button>
         </div>

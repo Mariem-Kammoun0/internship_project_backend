@@ -168,4 +168,18 @@ class ApplicationController extends Controller
             'message' =>
             'Application rejected successfully']);
         }
+
+    public function getMyApplication(int $offerId){
+        $offerId = (int) $offerId;
+        $userId = auth()->user()->id;
+        $application= Application::where('user_id', $userId)->where('job_offer_id',$offerId)->first();
+        if (!$application) {
+            return response()->json(null);
+        }
+        return response()->json([
+            'status' => $application->status,
+            'applicationId' => $application->id,
+    ]);
+    }
 }
+

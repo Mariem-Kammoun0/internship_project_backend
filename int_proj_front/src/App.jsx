@@ -27,7 +27,7 @@ function App() {
         <Route path='/update-company' element={<UpdateCompany/>}/>
         <Route path='/my-company' element={<ShowCompany/>}/>
         <Route path="/profile" element={<Profile />} />
-        <Route path="/job-offers/:id" element={<JobOfferPage />}/>
+        <Route path="/job-offers/:id" element={<JobOfferPage/>}/>
       </Routes>
     </div>
   );

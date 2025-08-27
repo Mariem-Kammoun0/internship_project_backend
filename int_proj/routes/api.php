@@ -36,6 +36,7 @@ Route::middleware(['auth:sanctum',IsEmployer::class])->group(function () {
 Route::middleware(['auth:sanctum',IsEmployee::class])->group(function () {
     Route::post('/employee/applications/{offerId}', [ApplicationController::class, 'store']);
     Route::get('/employee/my-applications', [ApplicationController::class, 'myApplications']);
+    Route::get('/employee/my-application/{offerId}', [ApplicationController::class, 'getMyApplication']);
     Route::put('/employee/applications/{id}/motivation-letter', [ApplicationController::class, 'addMotivationLetter']);
     Route::delete('/employee/applications/{id}', [ApplicationController::class, 'destroy']);
 });

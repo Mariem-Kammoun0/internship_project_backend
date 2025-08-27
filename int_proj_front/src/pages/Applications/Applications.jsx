@@ -26,7 +26,7 @@ function Applications() {
 
     useEffect(() => {
         const getApplications= async (()=>{
-        const apps= await getJobApplications({
+        const apps= getJobApplications({
                 job_offer_id: lastSearchQuery,
                 filters
                  });

@@ -1,5 +1,41 @@
 import { apiClient } from "./axiosInstance";
 
+const handleError = (err, context = 'Request') => {
+    console.error(`${context} error:`, err);
+    
+    if (!err.response) {
+        throw new Error('Network error. Please check your connection.');
+    }
+    const { status, data } = err.response;
+    
+    if (data?.message) {
+        throw new Error(data.message);
+    }
+    
+    switch (status) {
+        case 400:
+            throw new Error('Invalid request data.');
+        case 401:
+            throw new Error('Please log in to continue.');
+        case 403:
+            throw new Error('You are not authorized to perform this action.');
+        case 404:
+            throw new Error('Resource not found.');
+        case 409:
+            throw new Error('Conflict: This action cannot be completed.');
+        case 410:
+            throw new Error('This resource is no longer available.');
+        case 422:
+            throw new Error('Validation failed. Please check your input.');
+        case 429:
+            throw new Error('Too many requests. Please try again later.');
+        default:
+            if (status >= 500) {
+                throw new Error('Server error. Please try again later.');
+            }
+            throw new Error(`Request failed with status ${status}.`);
+    }
+};
 
 // Get user's applications with search and filters
 export const buildQueryParams = async ({ page = 1, search = "", filters = {} } = {}) => {
@@ -31,137 +67,88 @@ export const getMyApplications = async({ page = 1, search = "", filters = {} } =
 // Apply for a job
 export const applyForJob = async (jobOfferId, applicationData) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/job-offers/${jobOfferId}/apply`, {
-            method: 'POST',
-            headers: getAuthHeaders(),
-            body: JSON.stringify(applicationData),
-        });
-
-        return await handleResponse(response);
+        const res = await apiClient.post(`/employee/applications/${jobOfferId}`, applicationData);
+        return res.data;
     } catch (error) {
-        console.error('Error applying for job:', error);
-        throw error;
+        handleError(error, 'Applying for job');
     }
 };
 
 export const withdrawApplication = async (applicationId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/applications/${applicationId}`, {
-            method: 'DELETE',
-            headers: getAuthHeaders(),
-        });
-
-        return await handleResponse(response);
+        const res = await apiClient.delete(`/employee/applications/${applicationId}`);
+        return res.data;
     } catch (error) {
-        console.error('Error withdrawing application:', error);
-        throw error;
+        handleError(error, 'withdrawing application');
     }
 };
 
 export const updateApplicationStatus = async (applicationId, status, notes = "") => {
     try {
-        const response = await fetch(`${API_BASE_URL}/applications/${applicationId}/status`, {
-            method: 'PATCH',
-            headers: getAuthHeaders(),
-            body: JSON.stringify({ status, notes }),
-        });
-
-        return await handleResponse(response);
+        const res = await apiClient.patch(`/applications/${applicationId}/status`, { status, notes });
+        return res.data;
     } catch (error) {
-        console.error('Error updating application status:', error);
-        throw error;
+        handleError(error, 'updating application');
     }
 };
 
 // Add or update motivation letter
 export const updateMotivationLetter = async (applicationId, motivationLetter) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/applications/${applicationId}/motivation`, {
-            method: 'PUT',
-            headers: getAuthHeaders(),
-            body: JSON.stringify({ motivation_letter: motivationLetter }),
-        });
-
-        return await handleResponse(response);
-    } catch (error) {
-        console.error('Error updating motivation letter:', error);
-        throw error;
+        const res = await apiClient.put(`/employee/applications/${applicationId}`)
+        } catch (error) {
+        handleError(error, 'motivation letter update');
     }
 };
 
 // Get applications for a specific job offer (for recruiters)
 export const getJobApplications = async (jobOfferId, { page = 1, filters = {} } = {}) => {
     try {
-        const params = new URLSearchParams({
-            page: page.toString(),
-            per_page: '10'
-        });
-
-        // Add filter parameters
-        Object.entries(filters).forEach(([key, value]) => {
-            if (value && value !== "") {
-                params.append(key, value.toString());
-            }
-        });
-
-        const response = await fetch(`${API_BASE_URL}/job-offers/${jobOfferId}/applications?${params}`, {
-            method: 'GET',
-            headers: getAuthHeaders(),
-        });
-
-        return await handleResponse(response);
+        const queryString = buildQueryParams({ page, filters });
+        const res = await apiClient.get(`/job-offers/${jobOfferId}/applications?${queryString}`);
+        return res.data;
     } catch (error) {
-        console.error('Error fetching job applications:', error);
-        throw error;
+        handleError(error, ' getting jobs');
     }
 };
 
 // Reject an application (for recruiters)
 export const rejectApplication = async (jobOfferId, applicationId, reason = "") => {
     try {
-        const response = await fetch(`${API_BASE_URL}/job-offers/${jobOfferId}/applications/${applicationId}/reject`, {
-            method: 'POST',
-            headers: getAuthHeaders(),
-            body: JSON.stringify({ reason }),
-        });
-
-        return await handleResponse(response);
+        const res = await apiClient.post(`/employer/applications/${jobOfferId}/${applicationId}`, { reason });
+        return res.data;
     } catch (error) {
-        console.error('Error rejecting application:', error);
-        throw error;
+        handleError(error, 'rejecting job');
     }
 };
 
 // Get application statistics
 export const getApplicationStats = async () => {
     try {
-        const response = await fetch(`${API_BASE_URL}/applications/stats`, {
-            method: 'GET',
-            headers: getAuthHeaders(),
-        });
-
-        return await handleResponse(response);
+        const res = await apiClient.get('/applications/stats');
+        return res.data;
     } catch (error) {
-        console.error('Error fetching application stats:', error);
-        throw error;
+        handleError(error, 'getting application stats');
     }
 };
 
-// Get application details
 export const getApplicationDetails = async (applicationId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/applications/${applicationId}`, {
-            method: 'GET',
-            headers: getAuthHeaders(),
-        });
-
-        return await handleResponse(response);
+        const res = await apiClient.get(`/employer/applications/${applicationId}`);
+        return res.data;
     } catch (error) {
-        console.error('Error fetching application details:', error);
-        throw error;
+        handleError(error, 'application details');
     }
 };
 
+export const checkMyApplication = async (jobId) => {
+    try {
+        const res = await apiClient.get(`/employee/my-application/${jobId}`);
+        return res.data;
+    } catch (error) {
+        handleError(error, 'app details');
+    }
+};
 // Upload resume/CV for application
 export const uploadApplicationDocument = async (applicationId, file, documentType = 'resume') => {
     try {
@@ -169,21 +156,33 @@ export const uploadApplicationDocument = async (applicationId, file, documentTyp
         formData.append('document', file);
         formData.append('type', documentType);
 
-        const token = localStorage.getItem('token');
-        const response = await fetch(`${API_BASE_URL}/applications/${applicationId}/documents`, {
-            method: 'POST',
+        const res = await apiClient.post(`/applications/${applicationId}/documents`, formData, {
             headers: {
-                'Authorization': token ? `Bearer ${token}` : '',
+                'Content-Type': 'multipart/form-data',
             },
-            body: formData,
         });
-
-        return await handleResponse(response);
+        return res.data;
     } catch (error) {
-        console.error('Error uploading document:', error);
-        throw error;
+        handleError(error, 'document upload');
     }
 };
+
+export const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    };
+
+export const formatSalary = (salary) => {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(salary);
+    };
 
 export default {
     getMyApplications,
@@ -195,5 +194,7 @@ export default {
     rejectApplication,
     getApplicationStats,
     getApplicationDetails,
-    uploadApplicationDocument
+    checkMyApplication,
+    uploadApplicationDocument,
+    formatDate,formatSalary
 };

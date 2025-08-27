@@ -216,11 +216,11 @@ function EmployeeProfile() {
                                     </div>
                                     <div className="flex items-center space-x-1">
                                         <span>💰</span>
-                                        <span>{application.job_offer.salary}</span>
+                                        <span>{applicationService.formatSalary(application.job_offer.salary)}</span>
                                     </div>
                                     <div className="flex items-center space-x-1">
                                         <Calendar className="w-4 h-4" />
-                                        <span>Postulé il y a {application.created_at}</span>
+                                        <span>Postulé le: {applicationService.formatDate(application.created)}</span>
                                     </div>
                                 </div>
                             </div>
