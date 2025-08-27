@@ -6,7 +6,7 @@ export const getJobs = async ({ page = 1, search = '', filters = {} }) => {
   if (typeof search !== 'string') throw new Error('Search must be a string');
   try {
     const paramsObj = { page };
-    if (search) paramsObj.search = search;  // Only add if not empty
+    if (search) paramsObj.search = search;
 
     // Handle filters
     Object.entries(filters).forEach(([key, value]) => {
@@ -83,3 +83,14 @@ export const removeJob = async (id) => {
     throw err;
   }
 };
+
+export const getJob = async(id)=>{
+  try{
+    const res = await apiClient.get(`/job-offers/${id}`);
+        return res.data;
+
+  } catch (err) {
+    console.error(`Failed to delete job ${id}:`, err);
+    throw err;
+  }
+}

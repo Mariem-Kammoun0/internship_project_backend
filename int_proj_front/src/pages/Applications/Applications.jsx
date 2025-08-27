@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ApplicationFilter from "../../components/ApplicationFilter";
 import ApplicationCard from "../../components/ApplicationCard";
-// import { getApplications, withdrawApplication, updateApplicationStatus } from "../services/applicationService";
+import { getMyApplications, withdrawApplication, updateApplicationStatus } from "../services/applicationService";
 
 function Applications() {
     const [applications, setApplications] = useState([]);
@@ -22,166 +22,16 @@ function Applications() {
         sort: ""
     });
 
-    // Mock data pour la démonstration
-    const mockApplications = [
-        {
-            id: 1,
-            job_title: "Développeur Frontend Senior",
-            company_name: "TechCorp Tunisia",
-            location: "Tunis, Tunisie",
-            status: "interview",
-            applied_date: "2024-01-15",
-            job_type: "full-time",
-            salary: "3500-4500 TND",
-            cover_letter: "Je suis très intéressé par ce poste car il correspond parfaitement à mon profil...",
-            notes: "Entreprise prometteuse avec de bons avantages",
-            interview_date: "2024-01-25",
-            interview_time: "14:00"
-        },
-        {
-            id: 2,
-            job_title: "Chef de Projet Digital",
-            company_name: "Digital Agency",
-            location: "Sousse, Tunisie",
-            status: "pending",
-            applied_date: "2024-01-18",
-            job_type: "full-time",
-            salary: "3000-4000 TND",
-            cover_letter: "Mon expérience en gestion de projet digital...",
-            notes: "Première candidature dans cette agence"
-        },
-        {
-            id: 3,
-            job_title: "UX/UI Designer",
-            company_name: "Creative Studio",
-            location: "Sfax, Tunisie",
-            status: "accepted",
-            applied_date: "2024-01-10",
-            job_type: "contract",
-            salary: "2800-3500 TND",
-            cover_letter: "Passionné par le design d'expérience utilisateur...",
-            notes: "Portfolio bien reçu"
-        },
-        {
-            id: 4,
-            job_title: "Data Scientist",
-            company_name: "Analytics Pro",
-            location: "Tunis, Tunisie",
-            status: "rejected",
-            applied_date: "2024-01-05",
-            job_type: "full-time",
-            salary: "4000-5000 TND",
-            cover_letter: "Mes compétences en analyse de données...",
-            notes: "Feedback: manque d'expérience en ML"
-        },
-        {
-            id: 5,
-            job_title: "Développeur Mobile",
-            company_name: "Mobile Solutions",
-            location: "Monastir, Tunisie",
-            status: "reviewed",
-            applied_date: "2024-01-20",
-            job_type: "full-time",
-            salary: "3200-4200 TND",
-            cover_letter: "Développeur mobile expérimenté en React Native...",
-            notes: "Stack technique intéressante"
-        }
-    ];
-
     const navigate = useNavigate();
 
-    const loadApplications = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            // Simulation d'appel API
-            await new Promise(resolve => setTimeout(resolve, 800));
-            
-            let filteredApps = [...mockApplications];
-            
-            // Apply search filter
-            if (lastSearchQuery) {
-                filteredApps = filteredApps.filter(app => 
-                    app.job_title.toLowerCase().includes(lastSearchQuery.toLowerCase()) ||
-                    app.company_name.toLowerCase().includes(lastSearchQuery.toLowerCase())
-                );
-            }
-            
-            // Apply status filter
-            if (filters.status) {
-                filteredApps = filteredApps.filter(app => app.status === filters.status);
-            }
-            
-            // Apply company filter
-            if (filters.company) {
-                filteredApps = filteredApps.filter(app => 
-                    app.company_name.toLowerCase().includes(filters.company.toLowerCase())
-                );
-            }
-            
-            // Apply location filter
-            if (filters.location) {
-                filteredApps = filteredApps.filter(app => 
-                    app.location.toLowerCase().includes(filters.location.toLowerCase())
-                );
-            }
-            
-            // Apply job type filter
-            if (filters.job_type) {
-                filteredApps = filteredApps.filter(app => app.job_type === filters.job_type);
-            }
-            
-            // Apply date filter
-            if (filters.date_applied) {
-                const now = new Date();
-                filteredApps = filteredApps.filter(app => {
-                    const appDate = new Date(app.applied_date);
-                    const diffInDays = Math.floor((now - appDate) / (1000 * 60 * 60 * 24));
-                    
-                    switch (filters.date_applied) {
-                        case 'today': return diffInDays === 0;
-                        case 'week': return diffInDays <= 7;
-                        case 'month': return diffInDays <= 30;
-                        case '3months': return diffInDays <= 90;
-                        case '6months': return diffInDays <= 180;
-                        case 'year': return diffInDays <= 365;
-                        default: return true;
-                    }
-                });
-            }
-            
-            // Apply sorting
-            switch (filters.sort) {
-                case 'newest':
-                    filteredApps.sort((a, b) => new Date(b.applied_date) - new Date(a.applied_date));
-                    break;
-                case 'oldest':
-                    filteredApps.sort((a, b) => new Date(a.applied_date) - new Date(b.applied_date));
-                    break;
-                case 'status':
-                    filteredApps.sort((a, b) => a.status.localeCompare(b.status));
-                    break;
-                case 'company':
-                    filteredApps.sort((a, b) => a.company_name.localeCompare(b.company_name));
-                    break;
-                case 'position':
-                    filteredApps.sort((a, b) => a.job_title.localeCompare(b.job_title));
-                    break;
-            }
-            
-            setApplications(filteredApps);
-            setTotalPages(Math.ceil(filteredApps.length / 10));
-            
-        } catch (err) {
-            console.error("Error loading applications:", err);
-            setError("Erreur lors du chargement des candidatures.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
-        loadApplications();
+        const getApplications= async (()=>{
+        const apps= await getJobApplications({
+                job_offer_id: lastSearchQuery,
+                filters
+                 });
+        setApplications(apps);
+        })
     }, [currentPage, lastSearchQuery, filters]);
 
     const handleSearch = (query) => {

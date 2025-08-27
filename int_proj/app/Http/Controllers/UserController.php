@@ -14,6 +14,9 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
+        if (auth()->id() !== $user->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
 
         return response()->json($user);
     }
@@ -24,6 +27,10 @@ class UserController extends Controller
 
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
+        }
+
+        if (auth()->id() !== $user->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
         }
 
         $user->update($request->validated());

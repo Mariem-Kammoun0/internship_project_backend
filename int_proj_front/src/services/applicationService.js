@@ -1,59 +1,33 @@
-// src/services/applicationService.js
+import { apiClient } from "./axiosInstance";
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
-
-// Utility function to get auth headers
-const getAuthHeaders = () => {
-    const token = localStorage.getItem('token');
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': token ? `Bearer ${token}` : '',
-    };
-};
-
-// Handle API responses
-const handleResponse = async (response) => {
-    if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'An error occurred' }));
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-    }
-    return response.json();
-};
 
 // Get user's applications with search and filters
-export const getMyApplications = async ({ page = 1, search = "", filters = {} } = {}) => {
-    try {
-        const params = new URLSearchParams({
-            page: page.toString(),
-            per_page: '10'
-        });
+export const buildQueryParams = async ({ page = 1, search = "", filters = {} } = {}) => {
+    const params = new URLSearchParams({
+        page: page.toString(),
+        per_page: '10'
+    });
 
-        if (search) params.append('search', search);
+    if (search) params.append('search', search);
         
-        // Add filter parameters
-        Object.entries(filters).forEach(([key, value]) => {
-            if (value && value !== "") {
-                if (key === 'salary_range' && (value.min || value.max)) {
-                    if (value.min) params.append('salary_min', value.min.toString());
-                    if (value.max) params.append('salary_max', value.max.toString());
-                } else if (typeof value === 'string' || typeof value === 'number') {
-                    params.append(key, value.toString());
-                }
+    Object.entries(filters).forEach(([key, value]) => {
+        if (value && value !== "") {
+            if (key === 'salary_range' && (value.min || value.max)) {
+                if (value.min) params.append('salary_min', value.min.toString());
+                if (value.max) params.append('salary_max', value.max.toString());
+            } else if (typeof value === 'string' || typeof value === 'number') {
+                params.append(key, value.toString());
             }
-        });
+        }
+    });
+    return params.toString();
+    };
 
-        const response = await fetch(`${API_BASE_URL}/applications/my?${params}`, {
-            method: 'GET',
-            headers: getAuthHeaders(),
-        });
-
-        return await handleResponse(response);
-    } catch (error) {
-        console.error('Error fetching applications:', error);
-        throw error;
-    }
-};
-
+export const getMyApplications = async({ page = 1, search = "", filters = {} } = {}) => {
+    const queryString = await buildQueryParams(page, 10, search, filters);
+    const res= await apiClient.get(`/employee/my-applications?${queryString}`);
+    return res.data;
+}
 // Apply for a job
 export const applyForJob = async (jobOfferId, applicationData) => {
     try {
@@ -70,7 +44,6 @@ export const applyForJob = async (jobOfferId, applicationData) => {
     }
 };
 
-// Withdraw an application
 export const withdrawApplication = async (applicationId) => {
     try {
         const response = await fetch(`${API_BASE_URL}/applications/${applicationId}`, {
@@ -85,7 +58,6 @@ export const withdrawApplication = async (applicationId) => {
     }
 };
 
-// Update application status (for recruiters)
 export const updateApplicationStatus = async (applicationId, status, notes = "") => {
     try {
         const response = await fetch(`${API_BASE_URL}/applications/${applicationId}/status`, {

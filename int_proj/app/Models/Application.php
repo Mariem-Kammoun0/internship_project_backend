@@ -36,4 +36,9 @@ class Application extends Model
         return $this->belongsTo(User::class);
     }
 
+     public function scopeStatus($q, string $status)
+    {
+        return $status ? $query->where('status', $status) : $query;
+    }
+
 }

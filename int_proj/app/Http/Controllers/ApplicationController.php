@@ -70,13 +70,25 @@ class ApplicationController extends Controller
     /**
      * Display the candidates applications.
      */
-    public function myApplications()
+    public function myApplications(request $request)
     {
         $userId = auth()->user()->id;
-        $applications = Application::where('user_id', $userId)->get();
+        $query = Application::where('user_id', $userId)
+        ->with(['jobOffer' => function($q) {
+            $q->select('id','title','salary','company_id');
+        },'jobOffer.company' => function($q) {
+            $q->select('id','name','address');
+        }]);
+
+        if ($request->filled('status')){
+            $query->status($request->status);
+        }
+        $applications= $query->get();
+
         if ($applications->isEmpty()) {
             return response()->json(['message' => 'No applications found for this user'], 404);
         }
+
         return response()->json($applications);
     }
 
