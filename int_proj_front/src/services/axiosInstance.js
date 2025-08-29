@@ -44,11 +44,18 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const status = error.response?.status;
+    if (status === 401) {
       console.warn("Unauthorized! Redirecting to login...");
       removeAuthToken();
     }
-    if (error.response?.status >= 500) {
+    if (status === 403) {
+      console.warn("Forbidden: You don't have permission to do this.");
+    }
+    if (status === 404) {
+      console.info("Resource not found:", error.config.url);
+    }
+    if (status >= 500) {
       console.error("Server error:", error.response.data);
     }
     return Promise.reject(error);

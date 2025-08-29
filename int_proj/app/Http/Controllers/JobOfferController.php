@@ -42,19 +42,19 @@ class JobOfferController extends Controller
                 $query->where('title', 'like', "%{$request->search}%");
             }
             if ($request->filled('employment_type')) {
-                $query->byEmploymentType($request->employment_type);
+                $query->EmploymentType($request->employment_type);
             }
             if ($request->filled('type_of_contract')) {
-                $query->byTypeOfContract($request->type_of_contract);
+                $query->TypeOfContract($request->type_of_contract);
             }
             if ($request->filled('salary')) {
-                $query->bySalary($request->salary);
+                $query->Salary($request->salary);
             }
             if ($request->filled('company_location')) {
                 $query->companyLocation($request->company_location);
             }
             if ($request->filled('application_deadline')) {
-                $query->byApplicationDeadline($request->application_deadline);
+                $query->ApplicationDeadline($request->application_deadline);
             }
 
             // Safe sorting

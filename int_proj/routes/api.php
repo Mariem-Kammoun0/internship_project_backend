@@ -15,7 +15,7 @@ use App\Http\Middleware\IsEmployee;
 
 Route::middleware(['auth:sanctum', IsEmployer::class])->group(function () {
     Route::post('/company', [CompanyController::class, 'store']);
-    Route::get('/company', [CompanyController::class, 'show']);
+    Route::get('/my-company', [CompanyController::class, 'show']);
     Route::put('/company', [CompanyController::class, 'update']);
     Route::delete('/company', [CompanyController::class, 'destroy']);
 });

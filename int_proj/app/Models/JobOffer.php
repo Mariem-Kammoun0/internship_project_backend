@@ -111,7 +111,7 @@ class JobOffer extends Model
 
     public function scopeCompanyLocation($query, $location)
     {
-        $companyIds = Company::where('location', $location)->pluck('id');
+        $companyIds = Company::where('address', $location)->pluck('id');
         return $companyIds->isNotEmpty() ? $query->whereIn('company_id', $companyIds) : $query;
     }
 

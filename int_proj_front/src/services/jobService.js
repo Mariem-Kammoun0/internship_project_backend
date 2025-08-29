@@ -30,7 +30,6 @@ export const getJobs = async ({ page = 1, search = '', filters = {} }) => {
     return res.data;
   }catch (err) {
   if (!err.response) {
-    // Network error
     throw new Error('Network error. Please check your connection.');
   }
   
