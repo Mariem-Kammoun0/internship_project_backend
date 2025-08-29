@@ -8,8 +8,10 @@ import Home from './pages/Home.jsx';
 import CreateCompany from './pages/Company/CreateCompany.jsx';
 import UpdateCompany from './pages/Company/UpdateCompany.jsx';
 import ShowCompany from './pages/Company/ShowCompany.jsx';
-import Profile from './pages/User/EmployeeProfile.jsx'
+import EmployeeProfile from './pages/User/EmployeeProfile.jsx';
+import EmployerProfile from './pages/User/EmployerProfile.jsx'
 import JobOfferPage from './pages/JobOffers/JobOfferPage.jsx';
+import Companies from './pages/Company/Companies.jsx';
 
 function App() {
   useEffect(() => {
@@ -26,8 +28,10 @@ function App() {
         <Route path='/create-company' element={<CreateCompany/>}/>
         <Route path='/update-company' element={<UpdateCompany/>}/>
         <Route path='/my-company' element={<ShowCompany/>}/>
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/employee/profile" element={<EmployeeProfile />} />
+        <Route path="/employer/profile" element={<EmployerProfile />} />
         <Route path="/job-offers/:id" element={<JobOfferPage/>}/>
+        <Route path="companies" element={<Companies/>}/>
       </Routes>
     </div>
   );

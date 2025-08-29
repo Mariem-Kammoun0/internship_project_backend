@@ -51,36 +51,6 @@ export const getJobs = async ({ page = 1, search = '', filters = {} }) => {
 }
 }
 
-export const createJob = async (jobData) => {
-  try {
-    const res = await apiClient.post(`/job-offers`, jobData);
-    return res.data;
-  } catch (err) {
-    console.error("Failed to create job:", err);
-    throw err;
-  }
-};
-
-export const updateJob = async (id, jobData) => {
-  try {
-    const res = await apiClient.put(`/job-offers/${id}`, jobData);
-    return res.data;
-  } catch (err) {
-    console.error(`Failed to update job ${id}:`, err);
-    throw err;
-  }
-};
-
-export const removeJob = async (id) => {
-  try {
-    const res = await apiClient.delete(`/job-offers/${id}`);
-    return res.data;
-  } catch (err) {
-    console.error(`Failed to delete job ${id}:`, err);
-    throw err;
-  }
-};
-
 export const getJob = async(id)=>{
   try{
     const res = await apiClient.get(`/job-offers/${id}`);

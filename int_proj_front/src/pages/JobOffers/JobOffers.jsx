@@ -1,5 +1,5 @@
 import JobCard from "../../components/JobCard";
-import { getJobs } from "../../services/jobService";
+import { getJobs } from "../../services/PublicJobService";
 import { useEffect, useState } from "react";
 import JobFilter from "../../components/JobFilter";
 

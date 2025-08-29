@@ -31,14 +31,14 @@ export default function NavBar() {
         { name: 'Créer offre', href: '/job-create' },
         { name: 'Entreprises', href: '/companies' },
         { name: 'Offres', href: '/job-offers' },
-        { name: 'Profil', href: '/profile' },
+        { name: 'Profil', href: '/employer/profile' },
         { name: 'Déconnexion', href: '/logout' },
       ];
     } else {
       navigation = [
         { name: 'Entreprises', href: '/companies' },
         { name: 'Offres', href: '/job-offers' },
-        { name: 'Profil', href: '/profile' },
+        { name: 'Profil', href: '/employee/profile' },
         { name: 'Déconnexion', href: '/logout' },
       ];
     }

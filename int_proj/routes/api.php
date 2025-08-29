@@ -11,8 +11,6 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Middleware\IsEmployer;
 use App\Http\Middleware\IsEmployee;
 
-
-
 Route::middleware(['auth:sanctum', IsEmployer::class])->group(function () {
     Route::post('/company', [CompanyController::class, 'store']);
     Route::get('/my-company', [CompanyController::class, 'show']);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getJob } from "../../services/jobService";
+import { getJob } from "../../services/PublicJobService";
 import { applyForJob, withdrawApplication, checkMyApplication, formatDate, formatSalary } from "../../services/applicationService";
 
 function JobOfferPage() {
