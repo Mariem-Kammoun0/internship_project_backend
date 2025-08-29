@@ -2,8 +2,6 @@
 import { apiClient } from "./axiosInstance";
 
 export const getJobs = async ({ page = 1, search = '', filters = {} }) => {
-  if (page < 1) throw new Error('Page must be greater than 0');
-  if (typeof search !== 'string') throw new Error('Search must be a string');
   try {
     const paramsObj = { page };
     if (search) paramsObj.search = search;
