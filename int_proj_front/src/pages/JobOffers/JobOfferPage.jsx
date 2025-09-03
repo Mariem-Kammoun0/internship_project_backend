@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getJob } from "../../services/PublicJobService";
-import { applyForJob, withdrawApplication, checkMyApplication, formatDate, formatSalary } from "../../services/applicationService";
+import { getJob } from "../../services/jobService";
 
 function JobOfferPage() {
     const { id } = useParams();

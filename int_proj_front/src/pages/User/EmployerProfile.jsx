@@ -1,26 +1,43 @@
 import { User, Settings, BarChart3, Briefcase, Bell, Shield, LogOut, Edit2, Mail, Phone, Calendar, MapPin, FileText, Eye, Clock, CheckCircle, XCircle } from 'lucide-react';
-import applicationService from "../../services/applicationService";
 import React ,{ useState, useEffect } from 'react';
 import { isAuthenticated } from '../../services/auth';
 import { getUser, updateUser } from '../../services/userServices';
+import { showMyCompany ,createCompany,updateCompany} from '../../services/companyService';
+import applicationService from '../../services/ApplicationService';
 import { useNavigate } from "react-router-dom";
 
 function EmployerProfile() {
     const [activeTab, setActiveTab] = useState('dashboard');
     const [userInfo, setUserInfo] = useState(null);
-    const [jobs, setJobs]= useState([])
+    const [company, setCompany]= useState(null);
+    const [jobs, setJobs]= useState([]);
+    const [applications, setApplications]=useState([])
     const [error, setError]= useState(null);
+    const [loading, setLoading]=useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [profileUpdate, setProfileUpdate]= useState({});
     
     const navigate = useNavigate();
 
     useEffect(()=>{
-        const fetchUser = async()=>{
-        const user=await isAuthenticated();
-        setUserInfo(user);
+        const fetchUserAndCompany = async()=>{
+            try{
+                setLoading(true);
+                const user=await isAuthenticated();
+                setUserInfo(user);
+                if(!user.company_id){
+                    setError("")
+                }
+                const companyData= await showMyCompany();
+                setCompany(companyData);
+                const jobsData= await CompanyJobOffers();
+                setJobs(jobsData);
+            }catch(e){
+                setError("Erreur lors du chargement des données. Veuillez réessayer plus tard.");
+                console.error("Error fetching user or company data:", e);
+            }
         };
-    fetchUser();
+    fetchUserAndCompany();
     },[]);
 
     useEffect(()=>{
